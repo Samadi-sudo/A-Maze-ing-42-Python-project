@@ -10,6 +10,7 @@ DIRS = {
 class Cell:
     def __init__(self):
         self.walls = N | E | S | W
+        self.visited = False
 
     def remove(self, wall_bit):
         self.walls &= ~wall_bit
