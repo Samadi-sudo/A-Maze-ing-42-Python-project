@@ -23,14 +23,14 @@ if __name__ == "__main__":
     for i in range(10):
         m.mlx_clear_window(mlx_ptr, win_ptr)
         drawer.draw_maze(WIDTH, HEIGHT, maze,0xFFFFFFFF)
-        time.sleep(0.5)
+        # time.sleep(0.5)
         maze.carve(2, i, 'S')
-        maze.carve(3, i, 'S')
-        maze.carve(4, i, 'S')
-        maze.carve(5, i, 'S')
-        maze.carve(6, i, 'S')
-        maze.carve(7, i, 'S')
-        maze.carve(8, i, 'S')
+        # maze.carve(3, i, 'S')
+        # maze.carve(4, i, 'S')
+        # maze.carve(5, i, 'S')
+        # maze.carve(6, i, 'S')
+        # maze.carve(7, i, 'S')
+        # maze.carve(8, i, 'S')
     def on_close(data):
         m.mlx_loop_exit(mlx_ptr)
         return 0
