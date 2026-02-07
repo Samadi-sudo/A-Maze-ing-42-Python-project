@@ -1,5 +1,5 @@
 from maze import N, E, S, W
-CELL = 10
+CELL = 50
 WALL_COLOR = 0xFFFFFFFF
 
 def hline(mlx, mlx_ptr, img_ptr, x1, x2, y, color):
