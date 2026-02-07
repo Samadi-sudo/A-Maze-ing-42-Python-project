@@ -51,10 +51,10 @@ def draw_42(mlx, mlx_ptr, img_ptr, color, centre, maze):
 
     ]
     for x, y in lst_4:
-        fill_cell(mlx, mlx_ptr, img_ptr, x, y ,0xFFFFFF00)
+        fill_cell(mlx, mlx_ptr, img_ptr, x, y ,color)
         maze.grid[y][x].visited = True
     for x, y in lst_2:
-        fill_cell(mlx, mlx_ptr, img_ptr, x, y ,0xFFFFFF00)
+        fill_cell(mlx, mlx_ptr, img_ptr, x, y ,color)
         maze.grid[y][x].visited = True
     return maze
 

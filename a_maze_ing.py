@@ -22,7 +22,7 @@ if __name__ == "__main__":
     drawer = MazeDrawer(m,mlx_ptr, win_ptr)
     for i in range(10):
         m.mlx_clear_window(mlx_ptr, win_ptr)
-        drawer.draw_maze(WIDTH, HEIGHT, maze,0xFFFFFFFF)
+        drawer.draw_maze(WIDTH, HEIGHT, maze,0xFF00F0F0)
         # time.sleep(0.5)
         maze.carve(2, i, 'S')
         # maze.carve(3, i, 'S')
