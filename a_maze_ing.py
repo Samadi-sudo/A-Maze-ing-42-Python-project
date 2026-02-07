@@ -22,13 +22,12 @@ if __name__ == "__main__":
 
     # draw maze
     drawer = MazeDrawer(m,mlx_ptr, win_ptr)
-    def recursive_7fir_test(x, y, WIDTH, HEIGHT):
+    drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
+    def dfs_Backtracking(x, y, WIDTH, HEIGHT):
         if maze.grid[y][x].visited:
             return False
-        maze.grid[y][x].visited = True
-        m.mlx_clear_window(mlx_ptr, win_ptr)
-        drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
 
+        maze.grid[y][x].visited = True
         directions = ["N", "E", "S", "W"]
         if SEED is not None:
             rng = random.Random(SEED + x * HEIGHT + y)
@@ -40,10 +39,12 @@ if __name__ == "__main__":
             nx, ny = maze.carve(x, y, direction)
 
             if (nx != x or ny != y):
-                recursive_7fir_test(nx, ny, WIDTH, HEIGHT)
+                dfs_Backtracking(nx, ny, WIDTH, HEIGHT)
         return True
 
-    recursive_7fir_test(0,0, WIDTH, HEIGHT)
+    dfs_Backtracking(0,0, WIDTH, HEIGHT)
+    m.mlx_clear_window(mlx_ptr, win_ptr)
+    drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
     def on_close(data):
         m.mlx_loop_exit(mlx_ptr)
         return 0
