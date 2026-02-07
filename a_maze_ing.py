@@ -27,6 +27,8 @@ if __name__ == "__main__":
         if maze.grid[y][x].visited:
             return False
 
+        m.mlx_clear_window(mlx_ptr, win_ptr)
+        drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
         maze.grid[y][x].visited = True
         directions = ["N", "E", "S", "W"]
         if SEED is not None:
@@ -42,7 +44,46 @@ if __name__ == "__main__":
                 dfs_Backtracking(nx, ny, WIDTH, HEIGHT)
         return True
 
-    dfs_Backtracking(0,0, WIDTH, HEIGHT)
+    def bfs_backtracking(start_x, start_y, WIDTH, HEIGHT):
+        from collections import deque
+        
+        queue = deque([(start_x, start_y)])
+        maze.grid[start_y][start_x].visited = True
+        
+        while queue:
+            # For true BFS, use popleft(). For randomized BFS, choose randomly
+            if SEED is not None:
+                rng = random.Random(SEED + len(queue))
+                idx = rng.randint(0, len(queue) - 1)
+                x, y = queue[idx]
+                del queue[idx]
+            else:
+                idx = random.randint(0, len(queue) - 1)
+                x, y = queue[idx]
+                del queue[idx]
+            
+            # Get all valid directions
+            directions = ["N", "E", "S", "W"]
+            if SEED is not None:
+                rng = random.Random(SEED + x * HEIGHT + y)
+                rng.shuffle(directions)
+            else:
+                random.shuffle(directions)
+            
+            # Try to carve in each direction
+            for direction in directions:
+                nx, ny = maze.carve(x, y, direction)
+                
+                # If we successfully carved (moved to a new cell)
+                if (nx != x or ny != y) and not maze.grid[ny][nx].visited:
+                    maze.grid[ny][nx].visited = True
+                    queue.append((nx, ny))
+                    
+                    # Optional: visualize
+                    m.mlx_clear_window(mlx_ptr, win_ptr)
+                    drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
+
+    bfs_backtracking(0,0, WIDTH, HEIGHT)
     m.mlx_clear_window(mlx_ptr, win_ptr)
     drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
     def on_close(data):
