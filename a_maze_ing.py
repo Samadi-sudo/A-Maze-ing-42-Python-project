@@ -1,15 +1,17 @@
 from mlx import Mlx
 from maze import Maze
 from draw_maze import CELL, MazeDrawer
+from parsing import parsing
 import time
+import random
 
-WIDTH, HEIGHT = 10, 10
-
+config = parsing()
+WIDTH, HEIGHT = config['WIDTH'], config['HEIGHT']
+SEED = config.get('seed', None)
 # create maze
 maze = Maze(WIDTH, HEIGHT)
 
 # carve something for testing
-# maze.carve(1, 0, 'E')
 # maze.carve(2, 0, 'S')
 # maze.carve(2, 1, 'S')
 if __name__ == "__main__":
@@ -20,17 +22,28 @@ if __name__ == "__main__":
 
     # draw maze
     drawer = MazeDrawer(m,mlx_ptr, win_ptr)
-    for i in range(10):
+    def recursive_7fir_test(x, y, WIDTH, HEIGHT):
+        if maze.grid[y][x].visited:
+            return False
+        maze.grid[y][x].visited = True
         m.mlx_clear_window(mlx_ptr, win_ptr)
-        drawer.draw_maze(WIDTH, HEIGHT, maze,0xFF00F0F0)
-        # time.sleep(0.5)
-        maze.carve(2, i, 'S')
-        # maze.carve(3, i, 'S')
-        # maze.carve(4, i, 'S')
-        # maze.carve(5, i, 'S')
-        # maze.carve(6, i, 'S')
-        # maze.carve(7, i, 'S')
-        # maze.carve(8, i, 'S')
+        drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
+
+        directions = ["N", "E", "S", "W"]
+        if SEED is not None:
+            rng = random.Random(SEED + x * HEIGHT + y)
+            rng.shuffle(directions)
+        else:
+            random.shuffle(directions)
+        
+        for direction in directions:
+            nx, ny = maze.carve(x, y, direction)
+
+            if (nx != x or ny != y):
+                recursive_7fir_test(nx, ny, WIDTH, HEIGHT)
+        return True
+
+    recursive_7fir_test(0,0, WIDTH, HEIGHT)
     def on_close(data):
         m.mlx_loop_exit(mlx_ptr)
         return 0

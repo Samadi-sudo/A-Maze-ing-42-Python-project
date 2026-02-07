@@ -26,10 +26,10 @@ class Maze:
         dx, dy, wall_here, wall_there = DIRS[direction]
         nx, ny = x + dx, y + dy
         if not (0 <= nx < self.w and 0 <= ny < self.h):
-            return False
-        if self.grid[y][x].visited or self.grid[ny][nx].visited:
-                return False
+            return (x,y)
+        if self.grid[ny][nx].visited:
+            return (x,y)
         self.grid[y][x].remove(wall_here)
         self.grid[ny][nx].remove(wall_there)
-        return True
+        return (nx, ny)
 
