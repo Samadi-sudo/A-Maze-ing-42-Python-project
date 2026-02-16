@@ -6,7 +6,7 @@ import time
 import random
 import sys
 
-sys.setrecursionlimit(1000000)
+sys.setrecursionlimit(2147483647)
 config = parsing()
 WIDTH, HEIGHT = config['WIDTH'], config['HEIGHT']
 SEED = config.get('seed', None)
@@ -25,12 +25,11 @@ if __name__ == "__main__":
     # draw maze
     drawer = MazeDrawer(m,mlx_ptr, win_ptr)
     drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
+
     def dfs_Backtracking(x, y, WIDTH, HEIGHT):
         if maze.grid[y][x].visited:
             return False
 
-        m.mlx_clear_window(mlx_ptr, win_ptr)
-        drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
         maze.grid[y][x].visited = True
         directions = ["N", "E", "S", "W"]
         if SEED is not None:
@@ -43,19 +42,17 @@ if __name__ == "__main__":
             nx, ny = maze.carve(x, y, direction)
 
             if (nx != x or ny != y):
+                drawer.draw_cell(maze, nx, ny)
+                m.mlx_do_sync(mlx_ptr)
                 dfs_Backtracking(nx, ny, WIDTH, HEIGHT)
         return True
 
-    def prims_Backtracking(x, y, WIDTH, HEIGHT, frontier=None):
-        if frontier is None:
-            frontier = {}
+    def prims_Backtracking(x, y, WIDTH, HEIGHT):
+        frontier = {}
 
         if maze.grid[y][x].visited:
             return False
         maze.grid[y][x].visited = True
-
-        m.mlx_clear_window(mlx_ptr, win_ptr)
-        drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
 
         directions = ["N", "E", "S", "W"]
         frontier[(x, y)] = directions.copy()
@@ -68,7 +65,7 @@ if __name__ == "__main__":
                 from_cell = random.choice(list(frontier.keys()))
             
             fx, fy = from_cell
-            
+
             # Randomly select a direction
             if frontier[from_cell]:
                 if SEED is not None:
@@ -84,20 +81,24 @@ if __name__ == "__main__":
                     del frontier[from_cell]
 
                 if (nx != fx or ny != fy):
-                    prims_Backtracking(nx, ny, WIDTH, HEIGHT, frontier)
+                    if not maze.grid[ny][nx].visited:
+                        maze.grid[ny][nx].visited = True
+                        frontier[(nx, ny)] = ["N", "E", "S", "W"].copy()
+                    drawer.draw_cell(maze, nx, ny)
+                    m.mlx_do_sync(mlx_ptr)
             else:
                 del frontier[from_cell]
-        
-        return True
-        
         return True
 
-    prims_Backtracking(0,0, WIDTH, HEIGHT)
-    m.mlx_clear_window(mlx_ptr, win_ptr)
-    drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
+    def loop(data):
+        dfs_Backtracking(0,0, WIDTH, HEIGHT)
+        return 0
     def on_close(data):
         m.mlx_loop_exit(mlx_ptr)
         return 0
-
     m.mlx_hook(win_ptr, 33, 0, on_close, None)
+    m.mlx_loop_hook(mlx_ptr, loop, None)
     m.mlx_loop(mlx_ptr)
+
+    # m.mlx_clear_window(mlx_ptr, win_ptr)
+    # drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)

@@ -1,6 +1,5 @@
 from maze import N, E, S, W
-CELL = 50
-WALL_COLOR = 0xFFFFFFFF
+CELL = 5
 
 def hline(mlx, mlx_ptr, img_ptr, x1, x2, y, color):
     for x in range(x1, x2):
@@ -10,7 +9,7 @@ def vline(mlx, mlx_ptr, img_ptr, x, y1, y2, color):
     for y in range(y1, y2):
         mlx.mlx_pixel_put(mlx_ptr, img_ptr, x, y, color)
 
-def draw_cell(mlx, mlx_ptr, img_ptr, cell, x, y):
+def draw_cell(mlx, mlx_ptr, img_ptr, cell, x, y, WALL_COLOR):
     px = x * CELL
     py = y * CELL
 
@@ -69,4 +68,11 @@ class MazeDrawer:
             draw_42(self.m, self.mlx_ptr, self.win_ptr, color, (WIDTH // 2, HEIGHT // 2), maze)
         for y in range(maze.h):
             for x in range(maze.w):
-                draw_cell(self.m, self.mlx_ptr, self.win_ptr, maze.grid[y][x], x, y)
+                draw_cell(self.m, self.mlx_ptr, self.win_ptr, maze.grid[y][x], x, y, 0xFFFFFFFF)
+
+    def draw_cell(self, maze, x, y):
+        tmp = maze.grid[y][x].walls
+        maze.grid[y][x].walls = 15
+        draw_cell(self.m, self.mlx_ptr, self.win_ptr, maze.grid[y][x], x, y, 0xFF000000)
+        maze.grid[y][x].walls = tmp
+        draw_cell(self.m, self.mlx_ptr, self.win_ptr, maze.grid[y][x], x, y, 0xFFFFFFFF)
