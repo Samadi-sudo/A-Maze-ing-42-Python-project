@@ -1,5 +1,5 @@
 from maze import N, E, S, W
-CELL = 5
+CELL = 40
 
 def hline(mlx, mlx_ptr, img_ptr, x1, x2, y, color):
     for x in range(x1, x2):
