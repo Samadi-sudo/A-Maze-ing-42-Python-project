@@ -7,7 +7,7 @@ class Color:
     block = 0
 
 
-def print_maze(maze, path=None, entry=(), exit=(), message=None, color_wa=0, color_42=0):
+def print_maze(maze, path=None, entry=(), exit=(), message=None, color_wa=None, color_42=None, animation = True):
     if platform.system() == 'Windows':
         os.system('cls')
     else:
@@ -31,6 +31,8 @@ def print_maze(maze, path=None, entry=(), exit=(), message=None, color_wa=0, col
 
     if path is None:
         path = []
+
+
     def is_in_path(x, y):
         if x >= width or y >= height:
             return False
@@ -91,12 +93,20 @@ def print_maze(maze, path=None, entry=(), exit=(), message=None, color_wa=0, col
         show_or_hide = 'Show'
     else:
         show_or_hide = 'Hide'
+    if animation is False:
+        an = 'Activate'
+        s = '  '
+    else:
+        an = 'Deactivate'
+        s = ''
     print('════════════════ A-Maze-ing ══════════════')
     print('| 1. Re-generate a new maze              |')
     print(f'| 2. {show_or_hide} path from entry to exit        |')
     print('| 3. Rotate maze colors                  |')
     print('| 4. Change color pattern 42             |')
-    print('| 5. Quit                                |')
+    print(f'| 5. {an} animation           {s}     |')
+    print(f'| 6. Change in algorithm                 |')
+    print('| 7. Quit                                |')
     print('══════════════════════════════════════════')
 
 
