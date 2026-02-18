@@ -1,8 +1,9 @@
-WIDTH=20
-HEIGHT=20
+WIDTH=384
+HEIGHT=201
 ENTRY=0,0
 EXIT=19,14
 OUTPUT_FILE=maze.txt
-PERFECT=true
-seed=333
-algorithm=dfs
+PERFECT=0
+#seed=333
+algorithm= dfs
+#display_mode = MLX

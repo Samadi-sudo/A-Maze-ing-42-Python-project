@@ -1,6 +1,6 @@
 PYTHON = python3
 PIP    = pip3
-MAIN   = a_maze_ing.py
+MAIN   = a_maze_in.py
 CONFIG = config.txt
 MLX_WHEEL_URL = https://cdn.intra.42.fr/document/document/43689/mlx-2.2-py3-ubuntu-any.whl
 MLX_WHEEL = mlx-2.2-py3-none-any.whl
@@ -18,6 +18,7 @@ debug:
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	rm -rf .mypy_cache
+	rm -rf images/*/*_resized.png
 	rm $(MLX_WHEEL)
 
 lint:

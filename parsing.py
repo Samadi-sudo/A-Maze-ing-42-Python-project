@@ -1,6 +1,9 @@
 from typing import Dict, Tuple
 import sys
 
+# def check_erors():
+#         config = parsing()
+
 def parsing() -> Dict[str, object]:
     if len(sys.argv) != 2:
         print("ERROR you should do: python3 a_maze_in.py <config_file>")
@@ -31,9 +34,9 @@ def parsing() -> Dict[str, object]:
                     config[key] = (int(x), int(y))
 
                 elif key == "PERFECT":
-                    if value not in ("True", "False", "true", "false"):
+                    if value not in ("True", "False", "true", "false", '1', '0'):
                         raise ValueError
-                    config[key] = value == "True" or value == "true"
+                    config[key] = value == "True" or value == "true" or value == '1'
                 elif key in ("algorithm", "OUTPUT_FILE") :
                     config[key] = value
                 else:
