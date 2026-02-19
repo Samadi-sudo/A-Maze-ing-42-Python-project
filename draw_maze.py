@@ -88,11 +88,12 @@ class MazeDrawer:
         self.CELL = CELL
     
     def draw_maze(self, WIDTH, HEIGHT, maze, color):
-        if WIDTH > 8 and HEIGHT > 6:
-            draw_42(self.m, self.mlx_ptr, self.win_ptr, color, (WIDTH // 2, HEIGHT // 2), maze, self.CELL)
         for y in range(maze.h):
             for x in range(maze.w):
                 draw_cell(self.m, self.mlx_ptr, self.win_ptr, maze.grid[y][x], x, y, 0xFFFFFFFF, self.CELL)
+                maze.grid[y][x].visited = False
+        if WIDTH > 8 and HEIGHT > 6:
+            draw_42(self.m, self.mlx_ptr, self.win_ptr, color, (WIDTH // 2, HEIGHT // 2), maze, self.CELL)
 
     def draw_cell(self, maze, x, y):
         tmp = maze.grid[y][x].walls

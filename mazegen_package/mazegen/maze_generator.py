@@ -36,6 +36,20 @@ class Maze:
         self.grid[y][x].remove(wall_here)
         self.grid[ny][nx].remove(wall_there)
         return (nx, ny)
+    
+    def moved(self, x, y, direction):
+        if direction not in DIRS:
+            raise ValueError("Bad direction")
+        dx, dy, wall_here , _ = DIRS[direction]
+        nx, ny = x + dx, y + dy
+        if not (0 <= nx < self.w and 0 <= ny < self.h):
+            return (x, y)
+        if self.grid[y][x].walls & wall_here:
+            return (x, y)
+        if self.grid[ny][nx].visited:
+            return (x, y)
+        return (nx, ny)
+
 
 class MazeGenerator:
     def __init__(self, width: int, height: int, entry: tuple[int, int] = (0, 0), end: tuple[int, int] | None = None, perfect: bool = True, seed: Optional[int] = None):
@@ -135,3 +149,46 @@ class MazeGenerator:
             else:
                 del frontier[from_cell]
         return True
+    
+    def dfs_solution(self, entry, sorti):
+        stack = []
+        stack.append(entry)
+        history = []
+        while stack:
+            x, y = stack[-1]
+            if (x, y) == sorti:
+                break
+            self.maze.grid[y][x].visited = True
+            directions = ['N', 'E', 'S', 'W']
+            moved = False
+            for direction in directions:
+                nx, ny = self.maze.moved(x, y, direction)
+                if (nx != x or ny != y):
+                    stack.append((nx, ny))
+                    if (x, y) != entry:
+                        history.append((x, y, 0xFF0FFF00))
+                    moved = True
+                    break
+            if not moved:
+                x, y = stack.pop()
+                history.append((x , y, 0xFF000000))
+        self.solution = stack
+        return history
+    
+    def bfs_solution(self, entry, sorti):
+        queue = [[entry, [entry]]]
+        direction = ['N', 'E', 'S', 'W']
+        history = []
+        while queue:
+            current, path = queue.pop(0)
+            if current == sorti:
+                self.solution = path
+                return path, history
+            x, y = current
+            self.maze.grid[y][x].visited = True
+            for i in direction:
+                nx, ny = self.maze.moved(x, y, i)
+                if (x != nx or y != ny):
+                    history.append((nx, ny))
+                    queue.append([(nx, ny), path+ [(nx, ny)]])
+        return []

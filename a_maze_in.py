@@ -37,18 +37,35 @@ if __name__ == "__main__":
         maze_gen.dfs_backtracking_iterative(0, 0)
     else:
         maze_gen.prims_algorithm(0, 0)
-    # for x, y in maze_gen.moves:
-    #         drawer.draw_cell(maze, x, y)
-    #         m.mlx_do_sync(mlx_ptr)
-    x = 0
-    while x < 5:
-        img = drawer.draw_image(x,0, "./images/mouse/Cute_Mouse_Runaway.png")
-        m.mlx_destroy_image(mlx_ptr, img)
-        m.mlx_clear_window(mlx_ptr, win_ptr)
-        drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
-        x += 1
-    img = drawer.draw_image(x,0, "./images/mouse/Cute_Mouse_Runaway.png")
-    drawer.draw_image(2,3, "./images/mouse/cheese.png")
+
+    for x, y in maze_gen.moves:
+            drawer.draw_cell(maze, x, y)
+            if ((y % 19 == 0) and (x % 19 == 0)):
+                m.mlx_do_sync(mlx_ptr)
+    # i = 0
+    # while i < 5:
+    #     img = drawer.draw_image(0,i, "./images/mouse/Cute_Mouse_Runaway.png")
+    #     m.mlx_destroy_image(mlx_ptr, img)
+    #     m.mlx_clear_window(mlx_ptr, win_ptr)
+    #     drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
+    #     i += 1
+    drawer.draw_image(0,0, "./images/mouse/Cute_Mouse_Runaway.png")
+    drawer.draw_image(382,200, "./images/mouse/cheese.png")
+    drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
+    path, history = maze_gen.bfs_solution((0,0), (382,200))
+    for x, y in history:
+            fill_cell(m, mlx_ptr, win_ptr,x , y, 0xFF0FFF00, CELL)
+            if ((y % 10 == 0) and (x % 10 == 0)):
+                m.mlx_do_sync(mlx_ptr)
+    m.mlx_clear_window(mlx_ptr, win_ptr)
+    drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
+    for x, y in path:
+            fill_cell(m, mlx_ptr, win_ptr,x , y, 0xFF0FFF00, CELL)
+            if ((y % 2 == 0) and (x % 2 == 0)):
+                m.mlx_do_sync(mlx_ptr)
+
+    drawer.draw_image(382,200, "./images/mouse/cheese.png")
+    drawer.draw_image(0,0, "./images/mouse/Cute_Mouse_Runaway.png")
     drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
 
     def on_close(data):
