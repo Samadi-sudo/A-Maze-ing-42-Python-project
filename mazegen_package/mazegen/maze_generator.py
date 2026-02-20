@@ -191,4 +191,4 @@ class MazeGenerator:
                 if (x != nx or y != ny):
                     history.append((nx, ny))
                     queue.append([(nx, ny), path+ [(nx, ny)]])
-        return []
+        return [] ,[]

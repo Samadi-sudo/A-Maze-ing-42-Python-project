@@ -1,8 +1,7 @@
 from mlx import Mlx
 from draw_maze import MazeDrawer, fill_cell
 from parsing import parsing
-from mazegen_package.mazegen import Maze, MazeGenerator
-import time
+from mazegen_package.mazegen import MazeGenerator
 import sys
 
 sys.setrecursionlimit(2147483647)
@@ -28,7 +27,8 @@ if __name__ == "__main__":
     CELL = min(screen_width // WIDTH, screen_height // HEIGHT)
     CELL = max(5, min(CELL, 50))
     win_ptr = m.mlx_new_window(mlx_ptr, WIDTH * CELL + 1, HEIGHT * CELL + 1, "Maze")
-
+    menu_ptr = m.mlx_new_window(mlx_ptr, 500, 500, "Menu/User_interface")
+    m.mlx_string_put(mlx_ptr, menu_ptr, 20, 20, 0xFF00F0F0, "salam")
     # draw maze
     drawer = MazeDrawer(m, mlx_ptr, win_ptr, CELL)
     drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
@@ -42,17 +42,12 @@ if __name__ == "__main__":
             drawer.draw_cell(maze, x, y)
             if ((y % 19 == 0) and (x % 19 == 0)):
                 m.mlx_do_sync(mlx_ptr)
-    # i = 0
-    # while i < 5:
-    #     img = drawer.draw_image(0,i, "./images/mouse/Cute_Mouse_Runaway.png")
-    #     m.mlx_destroy_image(mlx_ptr, img)
-    #     m.mlx_clear_window(mlx_ptr, win_ptr)
-    #     drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
-    #     i += 1
-    drawer.draw_image(0,0, "./images/mouse/Cute_Mouse_Runaway.png")
-    drawer.draw_image(382,200, "./images/mouse/cheese.png")
+    sx, sy = ENTRY
+    ex, ey = EXIT
+    drawer.draw_image(sx,sy, "./images/mouse/Cute_Mouse_Runaway.png")
+    drawer.draw_image(ex,ey, "./images/mouse/cheese.png")
     drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
-    path, history = maze_gen.bfs_solution((0,0), (382,200))
+    path, history = maze_gen.bfs_solution(ENTRY, EXIT)
     for x, y in history:
             fill_cell(m, mlx_ptr, win_ptr,x , y, 0xFF0FFF00, CELL)
             if ((y % 10 == 0) and (x % 10 == 0)):
@@ -64,8 +59,8 @@ if __name__ == "__main__":
             if ((y % 2 == 0) and (x % 2 == 0)):
                 m.mlx_do_sync(mlx_ptr)
 
-    drawer.draw_image(382,200, "./images/mouse/cheese.png")
-    drawer.draw_image(0,0, "./images/mouse/Cute_Mouse_Runaway.png")
+    drawer.draw_image(ex,ey, "./images/mouse/cheese.png")
+    drawer.draw_image(sy,sy, "./images/mouse/Cute_Mouse_Runaway.png")
     drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
 
     def on_close(data):
