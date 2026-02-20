@@ -4,6 +4,6 @@ ENTRY=0,0
 EXIT=49,49
 OUTPUT_FILE=maze.txt
 PERFECT=0
-#seed=333
+seed=333
 algorithm= prims
 #display_mode = MLX
