@@ -1,7 +1,8 @@
-from mlx import Mlx
-from draw_maze import MazeDrawer, fill_cell
 from parsing import parsing
 from mazegen_package.mazegen import MazeGenerator
+from mlx import Mlx
+from draw_maze import MazeDrawer, fill_cell
+from menu import menu_ptr
 import sys
 
 sys.setrecursionlimit(2147483647)
@@ -27,8 +28,7 @@ if __name__ == "__main__":
     CELL = min(screen_width // WIDTH, screen_height // HEIGHT)
     CELL = max(5, min(CELL, 50))
     win_ptr = m.mlx_new_window(mlx_ptr, WIDTH * CELL + 1, HEIGHT * CELL + 1, "Maze")
-    menu_ptr = m.mlx_new_window(mlx_ptr, 500, 500, "Menu/User_interface")
-    m.mlx_string_put(mlx_ptr, menu_ptr, 20, 20, 0xFF00F0F0, "salam")
+    menu_ptr(m, mlx_ptr)
     # draw maze
     drawer = MazeDrawer(m, mlx_ptr, win_ptr, CELL)
     drawer.draw_maze(WIDTH, HEIGHT, maze, 0xFF00F0F0)
@@ -69,4 +69,3 @@ if __name__ == "__main__":
 
     m.mlx_hook(win_ptr, 33, 0, on_close, None)
     m.mlx_loop(mlx_ptr)
-
