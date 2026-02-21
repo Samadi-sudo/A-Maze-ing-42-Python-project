@@ -13,9 +13,10 @@ ENTRY = config['ENTRY']
 EXIT = config['EXIT']
 SEED = config.get('seed')
 ALGORITHM = config.get('algorithm', 'dfs')
+colors = [0xFF00F0F0, 0xFF0000FF, 0xFFFF00FF]
 
 # create maze
-maze_gen = MazeGenerator(WIDTH, HEIGHT, seed=SEED)
+maze_gen = MazeGenerator(WIDTH, HEIGHT, seed = SEED)
 maze = maze_gen.maze
 
 if __name__ == "__main__":
@@ -32,15 +33,15 @@ if __name__ == "__main__":
     display = {'path': False}
     # draw maze
     drawer = MazeDrawer(m, mlx_ptr, win_ptr, CELL)
-    drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, 0xFF00F0F0)
+    drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, colors[state['3']])
 
     def gen_animation(speed):
         for x, y in maze_gen.moves:
-                drawer.draw_cell(maze_gen.maze, x, y)
+                drawer.draw_cell(maze_gen.maze, x, y, colors[state['3']])
                 if ((y % speed*2 == 0) and (x % speed*2 == 0)):
                     m.mlx_do_sync(mlx_ptr)
     def history_annimation_bfs(speed, animation):
-        path, history = maze_gen.bfs_solution(ENTRY, EXIT)
+        _ , history = maze_gen.bfs_solution(ENTRY, EXIT)
         if animation:
             for x, y in history:
                     fill_cell(m, mlx_ptr, win_ptr,x , y, 0xAF0FFF00, CELL)
@@ -64,8 +65,9 @@ if __name__ == "__main__":
         maze_gen.dfs_backtracking_iterative(0, 0)
     else:
         maze_gen.prims_algorithm(0, 0)
+
     m.mlx_clear_window(mlx_ptr, win_ptr)
-    drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, 0xFF00F0F0)
+    drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, colors[state['3']])
     m.mlx_do_sync(mlx_ptr)
 
 
@@ -77,7 +79,7 @@ if __name__ == "__main__":
                 drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, color)
                 path_animation(5, animation)
             else:
-                history_annimation_dfs(5, animation)
+                history_annimation_dfs(3, animation)
             display['path'] = True
         else:
             m.mlx_clear_window(mlx_ptr, win_ptr)
@@ -86,7 +88,7 @@ if __name__ == "__main__":
             display['path'] = False
 
     def regenerate(color):
-        maze_gen.__init__(WIDTH, HEIGHT)
+        maze_gen.__init__(WIDTH, HEIGHT, seed = SEED)
         m.mlx_clear_window(mlx_ptr, win_ptr)
         drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, color)
         m.mlx_do_sync(mlx_ptr)
@@ -103,10 +105,11 @@ if __name__ == "__main__":
 
     def on_loop(data):
         if state['1']:
-            regenerate(0xFF00F0F0)
+            regenerate(colors[state['3']])
             state['1'] = False
+            display['path'] = False
         if state['2']:
-            show_path(state['6'], 0xFF00F0F0)
+            show_path(state['6'], colors[state['3']])
             state['2'] = False
         return 0
 

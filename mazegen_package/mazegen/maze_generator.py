@@ -52,13 +52,11 @@ class Maze:
 
 
 class MazeGenerator:
-    def __init__(self, width: int, height: int, entry: tuple[int, int] = (0, 0), end: tuple[int, int] | None = None, perfect: bool = True, seed: Optional[int] = None):
+    def __init__(self, width: int, height: int, perfect: bool = True, seed: Optional[int] = None):
         if width < 2 or height < 2:
             raise ValueError("Width and height must both be >= 2.")
         self.width = width
         self.height = height
-        self.entry = entry
-        self.end = end
         self.perfect = perfect
         self.seed = seed
         self.maze = Maze(width, height)

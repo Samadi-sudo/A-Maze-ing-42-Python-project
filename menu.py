@@ -19,8 +19,6 @@ def fill_rectangle(x, y, w, h, mlx, mlx_ptr, win_ptr):
     for i in range(x + 1, x + w):
         for j in range(y + 1, y+ h):
             mlx.mlx_pixel_put(mlx_ptr, win_ptr, i, j, 0xF500F0F0)
-            # if (i % 225 == 0 and j == 0):
-            #     mlx.mlx_do_sync(mlx_ptr)
     draw_menu(mlx, mlx_ptr, win_ptr)
     for i in range(21,470):
         for j in range(10, 540):
