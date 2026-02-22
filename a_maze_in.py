@@ -5,7 +5,9 @@ from draw_maze import MazeDrawer, fill_cell
 from menu import menu_ptr
 import sound
 from output_gen import output_maze
+import signal
 
+signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 config = parsing()
 WIDTH, HEIGHT = config['WIDTH'], config['HEIGHT']
@@ -96,6 +98,7 @@ if __name__ == "__main__":
 
     def take_prize():
         sound.play_song("./sound_effect/start.wav")
+        sound.stop_song("./sound_effect/mouse/mouse-squeek.wav")
         show_path(False, colors[state['3']], True)
         drawer.draw_image(EXIT[0], EXIT[1], "./images/mouse/cheese.png")
         prev = None
@@ -110,6 +113,7 @@ if __name__ == "__main__":
         sound.stop_song("./sound_effect/mouse/mouse-walking.wav")
         sound.play_song("./sound_effect/Win.wav")
         drawer.draw_image(x, y, "./images/mouse/Cute Mouse_Eating_Cheese.png")
+        sound.play_song("./sound_effect/mouse/mouse-squeek.wav")
 
     def regenerate(color):
         maze_gen.__init__(WIDTH, HEIGHT, seed = SEED)
@@ -128,7 +132,8 @@ if __name__ == "__main__":
         drawer.draw_image(EXIT[0], EXIT[1], "./images/mouse/cheese.png")
         drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, color)
         m.mlx_do_sync(mlx_ptr)
-        output_maze(maze_gen, OUTPUT_FILE, ENTRY, EXIT)
+        if SEED is None:
+            output_maze(maze_gen, OUTPUT_FILE, ENTRY, EXIT)
 
     def on_loop(data):
         if state['1']:
@@ -137,10 +142,13 @@ if __name__ == "__main__":
             display['path'] = False
         if state['2']:
             show_path(state['6'], colors[state['3']])
+            drawer.draw_image(ENTRY[0], ENTRY[1], "./images/mouse/Cute_Mouse_Runaway.png")
+            drawer.draw_image(EXIT[0], EXIT[1], "./images/mouse/cheese.png")
             output_maze(maze_gen, OUTPUT_FILE, ENTRY, EXIT)
             state['2'] = False
         if state['5']:
             take_prize()
+            output_maze(maze_gen, OUTPUT_FILE, ENTRY, EXIT)
             state['5'] = False
         return 0
 
