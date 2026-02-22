@@ -4,15 +4,16 @@ from mlx import Mlx
 from draw_maze import MazeDrawer, fill_cell
 from menu import menu_ptr
 import sound
-import sys
+from output_gen import output_maze
 
-sys.setrecursionlimit(2147483647)
+
 config = parsing()
 WIDTH, HEIGHT = config['WIDTH'], config['HEIGHT']
 PERFECT = config['PERFECT']
 ENTRY = config['ENTRY']
 EXIT = config['EXIT']
 SEED = config.get('seed')
+OUTPUT_FILE = config.get('OUTPUT_FILE')
 ALGORITHM = config.get('algorithm', 'dfs')
 colors = [0xFF00F0F0, 0xFF0000FF, 0xFFFF00FF]
 
@@ -72,7 +73,7 @@ if __name__ == "__main__":
     drawer.draw_image(EXIT[0], EXIT[1], "./images/mouse/cheese.png")
     drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, colors[state['3']])
     m.mlx_do_sync(mlx_ptr)
-
+    output_maze(maze_gen, OUTPUT_FILE, ENTRY, EXIT)
 
     def show_path(animation, color, take_prize = False):
         if display['path'] == False or take_prize == True:
@@ -127,6 +128,7 @@ if __name__ == "__main__":
         drawer.draw_image(EXIT[0], EXIT[1], "./images/mouse/cheese.png")
         drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, color)
         m.mlx_do_sync(mlx_ptr)
+        output_maze(maze_gen, OUTPUT_FILE, ENTRY, EXIT)
 
     def on_loop(data):
         if state['1']:
@@ -135,6 +137,7 @@ if __name__ == "__main__":
             display['path'] = False
         if state['2']:
             show_path(state['6'], colors[state['3']])
+            output_maze(maze_gen, OUTPUT_FILE, ENTRY, EXIT)
             state['2'] = False
         if state['5']:
             take_prize()
