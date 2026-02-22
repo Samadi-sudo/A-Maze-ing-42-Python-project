@@ -81,7 +81,7 @@ class MazeGenerator:
 
             if (nx != x or ny != y):
                 self.moves.append((nx, ny))
-                self.dfs_backtracking(nx, ny)
+                self.dfs_backtracking_recursive(nx, ny)
         return True
 
     def dfs_backtracking_iterative(self, x: int, y:int):
@@ -164,7 +164,7 @@ class MazeGenerator:
                 if (nx != x or ny != y):
                     stack.append((nx, ny))
                     if (x, y) != entry:
-                        history.append((x, y, 0xFF0FFF00))
+                        history.append((x, y, 0xAF0FFF00))
                     moved = True
                     break
             if not moved:

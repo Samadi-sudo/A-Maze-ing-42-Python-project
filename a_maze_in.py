@@ -3,6 +3,7 @@ from mazegen_package.mazegen import MazeGenerator
 from mlx import Mlx
 from draw_maze import MazeDrawer, fill_cell
 from menu import menu_ptr
+import sound
 import sys
 
 sys.setrecursionlimit(2147483647)
@@ -67,12 +68,14 @@ if __name__ == "__main__":
         maze_gen.prims_algorithm(0, 0)
 
     m.mlx_clear_window(mlx_ptr, win_ptr)
+    drawer.draw_image(ENTRY[0], ENTRY[1], "./images/mouse/Cute_Mouse_Runaway.png")
+    drawer.draw_image(EXIT[0], EXIT[1], "./images/mouse/cheese.png")
     drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, colors[state['3']])
     m.mlx_do_sync(mlx_ptr)
 
 
-    def show_path(animation, color):
-        if display['path'] == False:
+    def show_path(animation, color, take_prize = False):
+        if display['path'] == False or take_prize == True:
             if state['4'] == 0:
                 history_annimation_bfs(5, animation)
                 m.mlx_clear_window(mlx_ptr, win_ptr)
@@ -80,12 +83,32 @@ if __name__ == "__main__":
                 path_animation(5, animation)
             else:
                 history_annimation_dfs(3, animation)
+                m.mlx_clear_window(mlx_ptr, win_ptr)
+                drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, color)
+                path_animation(5, animation)
             display['path'] = True
         else:
             m.mlx_clear_window(mlx_ptr, win_ptr)
             drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, color)
             m.mlx_do_sync(mlx_ptr)
             display['path'] = False
+
+    def take_prize():
+        sound.play_song("./sound_effect/start.wav")
+        show_path(False, colors[state['3']], True)
+        drawer.draw_image(EXIT[0], EXIT[1], "./images/mouse/cheese.png")
+        prev = None
+        for x, y in maze_gen.solution:
+            if prev:
+                fill_cell(m, mlx_ptr, win_ptr, prev[0], prev[1], 0xFF0FFF00, CELL)
+            drawer.draw_image(x, y, "./images/mouse/Cute_Mouse_Runaway.png")
+            sound.play_song("./sound_effect/mouse/mouse-walking.wav")
+            prev = (x, y)
+        fill_cell(m, mlx_ptr, win_ptr, prev[0], prev[1], 0xFF0FFF00, CELL)
+        sound.stop_song("./sound_effect/start.wav")
+        sound.stop_song("./sound_effect/mouse/mouse-walking.wav")
+        sound.play_song("./sound_effect/Win.wav")
+        drawer.draw_image(x, y, "./images/mouse/Cute Mouse_Eating_Cheese.png")
 
     def regenerate(color):
         maze_gen.__init__(WIDTH, HEIGHT, seed = SEED)
@@ -100,6 +123,8 @@ if __name__ == "__main__":
             gen_animation(5)
         else:
             m.mlx_clear_window(mlx_ptr, win_ptr)
+        drawer.draw_image(ENTRY[0], ENTRY[1], "./images/mouse/Cute_Mouse_Runaway.png")
+        drawer.draw_image(EXIT[0], EXIT[1], "./images/mouse/cheese.png")
         drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, color)
         m.mlx_do_sync(mlx_ptr)
 
@@ -111,6 +136,9 @@ if __name__ == "__main__":
         if state['2']:
             show_path(state['6'], colors[state['3']])
             state['2'] = False
+        if state['5']:
+            take_prize()
+            state['5'] = False
         return 0
 
     def on_close(data):

@@ -68,7 +68,7 @@ def resize_image_to_fit(input_path, size):
     h = img.height()
 
     longest_side = max(w, h)
-    factor = longest_side // size
+    factor = longest_side // size + 1
 
     if factor > 1:
         img = img.subsample(factor, factor)
