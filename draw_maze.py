@@ -30,8 +30,8 @@ def draw_cell(mlx, mlx_ptr, img_ptr, cell, x, y, WALL_COLOR, CELL):
 def fill_cell(mlx, mlx_ptr, img_ptr,x , y, color, CELL):
     px = x * CELL
     py = y * CELL
-    for i in range(px + 2, px + CELL - 1):
-        for j in range(py + 2, py + CELL - 1):
+    for i in range(px+2, px + CELL-1):
+        for j in range(py+2, py + CELL-1):
             mlx.mlx_pixel_put(mlx_ptr, img_ptr, i, j, color)
 
 def draw_42(mlx, mlx_ptr, img_ptr, color, centre, maze, CELL):
@@ -42,6 +42,7 @@ def draw_42(mlx, mlx_ptr, img_ptr, color, centre, maze, CELL):
                 (x-3, y),(x-2, y), (x-1, y),
                                    (x - 1, y + 1),
                                    (x - 1, y + 2)
+
             ]
     lst_2 = [
                 (x + 1, y - 2), (x + 2, y -2), (x + 3, y -2),
