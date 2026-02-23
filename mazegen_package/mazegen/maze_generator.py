@@ -1,7 +1,7 @@
 import random
 from typing import Optional
 
-N , E , S , W = 1, 2, 4, 8
+N, E, S, W = 1, 2, 4, 8
 
 DIRS = {
     'N': (0, -1, N, S),
@@ -9,6 +9,7 @@ DIRS = {
     'S': (0, 1, S, N),
     'W': (-1, 0, W, E)
 }
+
 
 class Cell:
     def __init__(self):
@@ -36,11 +37,11 @@ class Maze:
         self.grid[y][x].remove(wall_here)
         self.grid[ny][nx].remove(wall_there)
         return (nx, ny)
-    
+
     def moved(self, x, y, direction):
         if direction not in DIRS:
             raise ValueError("Bad direction")
-        dx, dy, wall_here , _ = DIRS[direction]
+        dx, dy, wall_here, _ = DIRS[direction]
         nx, ny = x + dx, y + dy
         if not (0 <= nx < self.w and 0 <= ny < self.h):
             return (x, y)
@@ -84,28 +85,28 @@ class MazeGenerator:
                 self.dfs_backtracking_recursive(nx, ny)
         return True
 
-    def dfs_backtracking_iterative(self, x: int, y:int):
-            stack = [(x, y)]
-            while stack:
-                x, y = stack[-1]
-                self.maze.grid[y][x].visited = True
-                directions = ["N", "E", "S", "W"]
-                if self.seed is not None:
-                    rng = random.Random(self.seed + x * self.height + y)
-                    rng.shuffle(directions)
-                else:
-                    random.shuffle(directions)
-                moved = False
-                for direction in directions:
-                    nx, ny = self.maze.carve(x, y, direction)
-                    if (nx != x or ny != y):
-                        self.moves.append((nx, ny))
-                        stack.append((nx, ny))
-                        moved = True
-                        break
-                if not moved:
-                    stack.pop() 
-                
+    def dfs_backtracking_iterative(self, x: int, y: int):
+        stack = [(x, y)]
+        while stack:
+            x, y = stack[-1]
+            self.maze.grid[y][x].visited = True
+            directions = ["N", "E", "S", "W"]
+            if self.seed is not None:
+                rng = random.Random(self.seed + x * self.height + y)
+                rng.shuffle(directions)
+            else:
+                random.shuffle(directions)
+            moved = False
+            for direction in directions:
+                nx, ny = self.maze.carve(x, y, direction)
+                if (nx != x or ny != y):
+                    self.moves.append((nx, ny))
+                    stack.append((nx, ny))
+                    moved = True
+                    break
+            if not moved:
+                stack.pop()
+
     def prims_algorithm(self, x: int, y: int):
         """Generate maze using Prim's algorithm."""
         frontier = {}
@@ -123,7 +124,7 @@ class MazeGenerator:
                 from_cell = rng.choice(list(frontier.keys()))
             else:
                 from_cell = random.choice(list(frontier.keys()))
-            
+
             fx, fy = from_cell
 
             if frontier[from_cell]:
@@ -147,14 +148,14 @@ class MazeGenerator:
             else:
                 del frontier[from_cell]
         return True
-    
+
     def kruskal_algorithm(self):
         parent = dict()
         cell_to_root = {}
         for y in range(self.height):
             for x in range(self.width):
                 parent[(x, y)] = [(x, y)]
-                cell_to_root[(x,y)] = (x,y)
+                cell_to_root[(x, y)] = (x, y)
 
         def ft_find(pos: tuple):
             return (cell_to_root[pos])
@@ -168,7 +169,7 @@ class MazeGenerator:
                 root_a, root_b = root_b, root_a
             for i in parent[root_b]:
                 cell_to_root[i] = root_a
-            
+
             parent[root_a].extend(parent[root_b])
             del parent[root_b]
             return (True)
@@ -186,7 +187,7 @@ class MazeGenerator:
         random.shuffle(walls)
 
         for x, y, direction in walls:
-            dx, dy, cell, neighbor = DIRS[direction] 
+            dx, dy, cell, neighbor = DIRS[direction]
             nx, ny = x + dx, y + dy
             if (self.maze.grid[y][x].visited
                     or self.maze.grid[ny][nx].visited):
@@ -195,8 +196,7 @@ class MazeGenerator:
                 self.maze.grid[y][x].remove(cell)
                 self.maze.grid[ny][nx].remove(neighbor)
                 self.moves.append((nx, ny))
-        
-    
+
     def dfs_solution(self, entry, sorti):
         stack = []
         stack.append(entry)
@@ -218,10 +218,10 @@ class MazeGenerator:
                     break
             if not moved:
                 x, y = stack.pop()
-                history.append((x , y, 0xFF000000))
+                history.append((x, y, 0xFF000000))
         self.solution = stack
         return history
-    
+
     def bfs_solution(self, entry, sorti):
         queue = [[entry, [entry]]]
         direction = ['N', 'E', 'S', 'W']
@@ -230,12 +230,48 @@ class MazeGenerator:
             current, path = queue.pop(0)
             if current == sorti:
                 self.solution = path
-                return path, history
+                return history
             x, y = current
             self.maze.grid[y][x].visited = True
             for i in direction:
                 nx, ny = self.maze.moved(x, y, i)
                 if (x != nx or y != ny):
                     history.append((nx, ny))
-                    queue.append([(nx, ny), path+ [(nx, ny)]])
-        return [] ,[]
+                    queue.append([(nx, ny), path + [(nx, ny)]])
+        return []
+    
+
+    def a_star_solution(self, entry: tuple, sorti: tuple):
+        def ft_manhaten(pos: tuple, sorti: tuple):
+            xa, ya = pos
+            xb, yb = sorti
+            return (abs(xb - xa) + abs(yb - ya))
+
+        open_list = [(0, 0, entry, [entry])]
+        directions = ['N', 'E', 'S', 'W']
+        history = []
+        while open_list:
+            best_index = 0
+            for i in range(1, len(open_list)):
+                if open_list[i][0] < open_list[best_index][0]:
+                    best_index = i
+            f, g, current, path = open_list.pop(best_index)
+            x, y = current
+            if current == sorti:
+                self.solution = path
+                return history
+            if self.maze.grid[y][x].visited:
+                continue
+            self.maze.grid[y][x].visited = True
+            for direction in directions:
+                nx, ny = self.maze.moved(x, y, direction)
+                if (nx, ny) == (x, y):
+                    continue
+                new_g = g + 1
+                new_h = ft_manhaten((nx,ny), sorti)
+                new_f = new_g + new_h
+                history.append((nx, ny))
+                open_list.append((new_f, new_g, (nx, ny), path + [(nx, ny)]))
+
+        self.solution = []
+        return history

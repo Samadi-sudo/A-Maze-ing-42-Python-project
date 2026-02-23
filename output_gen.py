@@ -10,7 +10,8 @@ def path(maze_gen):
             if (dx, dy) == (vx, vy):
                 directions.append(name)
     return directions
-    
+
+
 def output_maze(maze_gen, file, ENTRY, EXIT):
     rows = len(maze_gen.maze.grid)
     cols = len(maze_gen.maze.grid[0])

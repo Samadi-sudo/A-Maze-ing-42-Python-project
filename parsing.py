@@ -115,8 +115,6 @@ def parsing() -> Dict[str, object]:
     config = check_parsing(config)
     return config
 
-
-
 try:
     print(parsing())
 except (SurfaceError, CordonateEroor, ParsingError) as e:
