@@ -148,6 +148,55 @@ class MazeGenerator:
                 del frontier[from_cell]
         return True
     
+    def kruskal_algorithm(self):
+        parent = dict()
+        cell_to_root = {}
+        for y in range(self.height):
+            for x in range(self.width):
+                parent[(x, y)] = [(x, y)]
+                cell_to_root[(x,y)] = (x,y)
+
+        def ft_find(pos: tuple):
+            return (cell_to_root[pos])
+
+        def ft_union(a: tuple, b: tuple):
+            root_a = ft_find(a)
+            root_b = ft_find(b)
+            if root_a == root_b:
+                return False
+            if len(parent[root_a]) < len(parent[root_b]):
+                root_a, root_b = root_b, root_a
+            for i in parent[root_b]:
+                cell_to_root[i] = root_a
+            
+            parent[root_a].extend(parent[root_b])
+            del parent[root_b]
+            return (True)
+
+        walls = []
+        for y in range(self.height):
+            for x in range(self.width):
+                if x + 1 < self.width:
+                    walls.append((x, y, 'E'))
+                if y + 1 < self.height:
+                    walls.append((x, y, 'S'))
+
+        if self.seed:
+            random.seed(self.seed)
+        random.shuffle(walls)
+
+        for x, y, direction in walls:
+            dx, dy, cell, neighbor = DIRS[direction] 
+            nx, ny = x + dx, y + dy
+            if (self.maze.grid[y][x].visited
+                    or self.maze.grid[ny][nx].visited):
+                continue
+            if (ft_union((x, y), (nx, ny))):
+                self.maze.grid[y][x].remove(cell)
+                self.maze.grid[ny][nx].remove(neighbor)
+                self.moves.append((nx, ny))
+        
+    
     def dfs_solution(self, entry, sorti):
         stack = []
         stack.append(entry)

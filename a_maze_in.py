@@ -64,11 +64,12 @@ if __name__ == "__main__":
                 if ((y % 2 == 0) and (x % 2 == 0) and animation):
                     m.mlx_do_sync(mlx_ptr)
 
-
     if ALGORITHM.lower() == 'dfs':
-        maze_gen.dfs_backtracking_iterative(0, 0)
+            maze_gen.dfs_backtracking_iterative(ENTRY[0],ENTRY[1])
+    elif ALGORITHM.lower() == 'kruskal':
+        maze_gen.kruskal_algorithm()
     else:
-        maze_gen.prims_algorithm(0, 0)
+        maze_gen.prims_algorithm(ENTRY[0], ENTRY[1])
 
     m.mlx_clear_window(mlx_ptr, win_ptr)
     drawer.draw_image(ENTRY[0], ENTRY[1], "./images/mouse/Cute_Mouse_Runaway.png")
@@ -121,11 +122,13 @@ if __name__ == "__main__":
         drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, color)
         m.mlx_do_sync(mlx_ptr)
         if ALGORITHM.lower() == 'dfs':
-            maze_gen.dfs_backtracking_iterative(0, 0)
+            maze_gen.dfs_backtracking_iterative(ENTRY[0],ENTRY[1])
+        elif ALGORITHM.lower() == 'kruskal':
+            maze_gen.kruskal()
         else:
-            maze_gen.prims_algorithm(0, 0)
+            maze_gen.prims_algorithm(ENTRY[0], ENTRY[1])
         if state['6'] == True:
-            gen_animation(5)
+            gen_animation(2)
         else:
             m.mlx_clear_window(mlx_ptr, win_ptr)
         drawer.draw_image(ENTRY[0], ENTRY[1], "./images/mouse/Cute_Mouse_Runaway.png")

@@ -9,7 +9,7 @@ def play_song(sound_path):
         return
 
     try:
-        process = subprocess.Popen(["aplay", sound_path])
+        process = subprocess.Popen(["cvlc", sound_path])
         _running_sounds[sound_path] = process
     except Exception as e:
         print(f"Sound Error: {e}")

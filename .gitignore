@@ -1,0 +1,7 @@
+__pycache__
+maze.txt
+*resized.png
+*.pyc
+*.egg-info/
+dist/
+build/
