@@ -95,6 +95,7 @@ class MazeGenerator:
                 rng = random.Random(self.seed + x * self.height + y)
                 rng.shuffle(directions)
             else:
+                rng = None
                 random.shuffle(directions)
             moved = False
             for direction in directions:
@@ -106,6 +107,11 @@ class MazeGenerator:
                     break
             if not moved:
                 stack.pop()
+        if self.perfect == False:
+            if rng is None:
+                self.make_imperfect()
+            else:
+                self.make_imperfect(rng)
 
     def prims_algorithm(self, x: int, y: int):
         """Generate maze using Prim's algorithm."""
@@ -132,6 +138,7 @@ class MazeGenerator:
                     rng = random.Random(self.seed + sum(from_cell))
                     direction = rng.choice(frontier[from_cell])
                 else:
+                    rng = None
                     direction = random.choice(frontier[from_cell])
 
                 nx, ny = self.maze.carve(fx, fy, direction)
@@ -147,6 +154,11 @@ class MazeGenerator:
                     self.moves.append((nx, ny))
             else:
                 del frontier[from_cell]
+        if self.perfect == False:
+            if rng is None:
+                self.make_imperfect()
+            else:
+                self.make_imperfect(rng)
         return True
 
     def kruskal_algorithm(self):
@@ -186,6 +198,13 @@ class MazeGenerator:
             random.seed(self.seed)
         random.shuffle(walls)
 
+        if self.seed is not None:
+                rng = random.seed(self.seed)
+                random.shuffle(walls)
+            else:
+                rng = None
+                direction = random.choice(frontier[from_cell])
+
         for x, y, direction in walls:
             dx, dy, cell, neighbor = DIRS[direction]
             nx, ny = x + dx, y + dy
@@ -196,6 +215,12 @@ class MazeGenerator:
                 self.maze.grid[y][x].remove(cell)
                 self.maze.grid[ny][nx].remove(neighbor)
                 self.moves.append((nx, ny))
+
+        if self.perfect == False:
+            if rng is None:
+                self.make_imperfect()
+            else:
+                self.make_imperfect(rng)
 
     def dfs_solution(self, entry, sorti):
         stack = []
@@ -275,3 +300,18 @@ class MazeGenerator:
 
         self.solution = []
         return history
+
+    def make_imperfect(self, rng = random):
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.maze.grid[y][x].walls == N | E | S | W:
+                    self.maze.grid[y][x].visited = True
+                else:
+                    self.maze.grid[y][x].visited = False
+        extra_passages = max(1, (self.width * self.height) // 10)
+        for _ in range(extra_passages):
+            x = rng.randint(0, self.width - 2)
+            y = rng.randint(0, self.height - 2)
+            direction = random.choice(['E', 'S'])
+            if not self.maze.grid[y][x].visited:
+                self.maze.carve(x, y, direction)

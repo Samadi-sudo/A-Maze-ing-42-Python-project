@@ -20,7 +20,7 @@ ALGORITHM = config.get('algorithm', 'dfs')
 colors = [0xFF00F0F0, 0xFF0000FF, 0xFFFF00FF]
 
 # create maze
-maze_gen = MazeGenerator(WIDTH, HEIGHT, seed=SEED)
+maze_gen = MazeGenerator(WIDTH, HEIGHT, PERFECT, SEED)
 maze = maze_gen.maze
 
 if __name__ == "__main__":
@@ -131,7 +131,7 @@ if __name__ == "__main__":
         sound.play_song("./sound_effect/mouse/mouse-squeek.wav")
 
     def regenerate(color):
-        maze_gen.__init__(WIDTH, HEIGHT, seed=SEED)
+        maze_gen.__init__(WIDTH, HEIGHT, PERFECT, SEED)
         m.mlx_clear_window(mlx_ptr, win_ptr)
         drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, color)
         m.mlx_do_sync(mlx_ptr)
