@@ -138,7 +138,7 @@ if __name__ == "__main__":
         if ALGORITHM.lower() == 'dfs':
             maze_gen.dfs_backtracking_iterative(ENTRY[0], ENTRY[1])
         elif ALGORITHM.lower() == 'kruskal':
-            maze_gen.kruskal()
+            maze_gen.kruskal_algorithm()
         else:
             maze_gen.prims_algorithm(ENTRY[0], ENTRY[1])
         if state['6'] == True:

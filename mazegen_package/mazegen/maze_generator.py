@@ -93,10 +93,9 @@ class MazeGenerator:
             directions = ["N", "E", "S", "W"]
             if self.seed is not None:
                 rng = random.Random(self.seed + x * self.height + y)
-                rng.shuffle(directions)
             else:
-                rng = None
-                random.shuffle(directions)
+                rng = random
+            rng.shuffle(directions)
             moved = False
             for direction in directions:
                 nx, ny = self.maze.carve(x, y, direction)
@@ -108,10 +107,7 @@ class MazeGenerator:
             if not moved:
                 stack.pop()
         if self.perfect == False:
-            if rng is None:
-                self.make_imperfect()
-            else:
-                self.make_imperfect(rng)
+            self.make_imperfect(rng)
 
     def prims_algorithm(self, x: int, y: int):
         """Generate maze using Prim's algorithm."""
@@ -136,10 +132,9 @@ class MazeGenerator:
             if frontier[from_cell]:
                 if self.seed is not None:
                     rng = random.Random(self.seed + sum(from_cell))
-                    direction = rng.choice(frontier[from_cell])
                 else:
-                    rng = None
-                    direction = random.choice(frontier[from_cell])
+                    rng = random
+                direction = rng.choice(frontier[from_cell])
 
                 nx, ny = self.maze.carve(fx, fy, direction)
 
@@ -155,10 +150,7 @@ class MazeGenerator:
             else:
                 del frontier[from_cell]
         if self.perfect == False:
-            if rng is None:
-                self.make_imperfect()
-            else:
-                self.make_imperfect(rng)
+            self.make_imperfect(rng)
         return True
 
     def kruskal_algorithm(self):
@@ -194,16 +186,11 @@ class MazeGenerator:
                 if y + 1 < self.height:
                     walls.append((x, y, 'S'))
 
-        if self.seed:
-            random.seed(self.seed)
-        random.shuffle(walls)
-
         if self.seed is not None:
-                rng = random.seed(self.seed)
-                random.shuffle(walls)
-            else:
-                rng = None
-                direction = random.choice(frontier[from_cell])
+                rng = random.Random(self.seed)
+        else:
+            rng = random
+        rng.shuffle(walls)
 
         for x, y, direction in walls:
             dx, dy, cell, neighbor = DIRS[direction]
@@ -217,10 +204,7 @@ class MazeGenerator:
                 self.moves.append((nx, ny))
 
         if self.perfect == False:
-            if rng is None:
-                self.make_imperfect()
-            else:
-                self.make_imperfect(rng)
+            self.make_imperfect(rng)
 
     def dfs_solution(self, entry, sorti):
         stack = []
@@ -251,6 +235,7 @@ class MazeGenerator:
         queue = [[entry, [entry]]]
         direction = ['N', 'E', 'S', 'W']
         history = []
+        self.maze.grid[entry[1]][entry[0]].visited = True
         while queue:
             current, path = queue.pop(0)
             if current == sorti:
@@ -262,6 +247,7 @@ class MazeGenerator:
                 nx, ny = self.maze.moved(x, y, i)
                 if (x != nx or y != ny):
                     history.append((nx, ny))
+                    self.maze.grid[ny][nx].visited = True
                     queue.append([(nx, ny), path + [(nx, ny)]])
         return []
     
@@ -312,6 +298,9 @@ class MazeGenerator:
         for _ in range(extra_passages):
             x = rng.randint(0, self.width - 2)
             y = rng.randint(0, self.height - 2)
-            direction = random.choice(['E', 'S'])
-            if not self.maze.grid[y][x].visited:
-                self.maze.carve(x, y, direction)
+            direction = rng.choice(['E', 'S'])
+            if not self.maze.grid[y][x].visited and bin(self.maze.grid[y][x].walls).count('1') > 2:
+                nx, ny  = self.maze.carve(x, y, direction)
+                self.maze.grid[y][x].visited = True
+                if (nx, ny) != (x, y):
+                    self.maze.grid[ny][nx].visited = True
