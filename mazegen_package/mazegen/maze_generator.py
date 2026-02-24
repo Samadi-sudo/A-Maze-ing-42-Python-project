@@ -65,6 +65,23 @@ class MazeGenerator:
         self.solution = []
         self.moves: list[tuple[int, int]] = []
 
+    def p42(self):
+        cell_closed = [
+            (-1, 0), (-2, 0), (-3, 0), (-3, -1),
+            (-3, -2), (-1, 1), (-1, 2),
+            (1, 0), (1, 1), (1, 2), (2, 2),
+            (3, 2), (2, 0), (3, 0), (3, -1), (3, -2),
+            (1, -2), (2, -2)
+        ]
+        x = self.width // 2
+        y = self.height // 2
+
+        for dx, dy in cell_closed:
+            new_x = x + dx
+            new_y = y + dy
+            if 0 <= new_x < self.width and 0 <= new_y < self.height:
+                self.maze.grid[new_y][new_x].visited = True
+
     def dfs_backtracking_recursive(self, x: int, y: int):
         """Generate maze using Depth-First Search with backtracking."""
         if self.maze.grid[y][x].visited:
