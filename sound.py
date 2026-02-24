@@ -1,0 +1,27 @@
+import subprocess
+
+_running_sounds = {}
+
+
+def play_song(sound_path):
+    process = _running_sounds.get(sound_path)
+
+    if process:
+        if process.poll() is None:
+            return
+        else:
+            _running_sounds.pop(sound_path)
+
+    try:
+        process = subprocess.Popen(["cvlc", "--play-and-exit", sound_path],
+                                   stdout=subprocess.DEVNULL,
+                                   stderr=subprocess.DEVNULL)
+        _running_sounds[sound_path] = process
+    except Exception as e:
+        print(f"Sound Error: {e}")
+
+
+def stop_song(sound_path):
+    process = _running_sounds.get(sound_path)
+    if process and process.poll() is None:
+        process.terminate()
