@@ -1,6 +1,6 @@
-def path(maze_gen):
-    import mazegen_package.mazegen
-    dic = mazegen_package.mazegen.DIRS
+from mazegen_package.mazegen import MazeGenerator, DIRS
+def path(maze_gen: MazeGenerator) -> list:
+    dic = DIRS
     coordinates = maze_gen.solution
     directions = []
     for i in range(len(coordinates) - 1):
@@ -12,7 +12,7 @@ def path(maze_gen):
     return directions
 
 
-def output_maze(maze_gen, file, ENTRY, EXIT):
+def output_maze(maze_gen: MazeGenerator, file: str, ENTRY: tuple, EXIT: tuple) -> None:
     rows = len(maze_gen.maze.grid)
     cols = len(maze_gen.maze.grid[0])
     sx, sy = ENTRY

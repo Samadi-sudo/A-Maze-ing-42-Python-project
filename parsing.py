@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Tuple, cast
 import sys
 
 
@@ -14,7 +14,7 @@ class CordonateEroor(ParsingError):
     pass
 
 
-def forbiden_cells(width, height):
+def forbiden_cells(width: int, height: int) -> list:
     x = width // 2
     y = height // 2
     lst_4 = [
@@ -38,7 +38,7 @@ def forbiden_cells(width, height):
         return []
 
 
-def check_parsing(config: Dict[str, object]) -> None:
+def check_parsing(config: Dict[str, object]) -> Dict[str, object]:
     try:
         config['WIDTH'], config['HEIGHT'], config['ENTRY']
         config['EXIT'], config['OUTPUT_FILE'], config['PERFECT']
@@ -48,34 +48,38 @@ def check_parsing(config: Dict[str, object]) -> None:
                            " OUTPUT_FILE, PERFECT)\n"
                            "in config.txt to create the"
                            " maze otherwise i can't help you")
-    if config['WIDTH'] <= 3 or config['HEIGHT'] <= 3:
+    if cast(int, config['WIDTH']) <= 3 or cast(int, config['HEIGHT']) <= 3:
         raise SurfaceError(
             "can't create a maze with a surface less than '9' (3x3)")
 
-    if config['WIDTH'] > 383 or config['HEIGHT'] > 201:
+    if cast(int, config['WIDTH']) > 383 or cast(int, config['HEIGHT']) > 201:
         raise SurfaceError("sorry but my screen limit was width:383 and"
                            " height:201 so the max you can do is this"
                            " (still working on a solution to make it even"
                            " bigger lol)")
-    if config['ENTRY'] == config['EXIT']:
+    if (cast(Tuple[int, int], config['ENTRY'])
+       == cast(Tuple[int, int], config['EXIT'])):
         raise CordonateEroor("you are putting the exit exactly where the"
                              " start is don't be stupid it's a maze man")
 
-    if (config['ENTRY'] in forbiden_cells(config['WIDTH'], config['HEIGHT'])
-            or config['EXIT']
-            in forbiden_cells(config['WIDTH'], config['HEIGHT'])):
+    if (cast(Tuple[int, int], config['ENTRY'])
+       in forbiden_cells(cast(int, config['WIDTH']),
+                         cast(int, config['HEIGHT']))
+       or cast(Tuple[int, int], config['EXIT'])
+       in forbiden_cells(cast(int, config['WIDTH']),
+                         cast(int, config['HEIGHT']))):
         raise CordonateEroor("you can't enter any cell that"
                              " are building the logo"
                              " they are forbiden")
-    sx, sy = config['ENTRY']
-    ex, ey = config['EXIT']
-    if sx >= config['WIDTH'] or sy >= config['HEIGHT']:
+    sx, sy = cast(Tuple[int, int], config['ENTRY'])
+    ex, ey = cast(Tuple[int, int], config['EXIT'])
+    if sx >= cast(int, config['WIDTH']) or sy >= cast(int, config['HEIGHT']):
         raise CordonateEroor(
             "you might want to reconsider where you want to put the ENTRY hhh")
-    if ex >= config['WIDTH'] or ey >= config['HEIGHT']:
+    if ex >= cast(int, config['WIDTH']) or ey >= cast(int, config['HEIGHT']):
         raise CordonateEroor(
             "you might want to reconsider where you want to put the EXIT hhh")
-    if len(config['OUTPUT_FILE']) == 0:
+    if len(str(config['OUTPUT_FILE'])) == 0:
         raise ParsingError("not a valid config file name")
     return config
 
@@ -139,7 +143,7 @@ def parsing() -> Dict[str, object]:
 try:
     config = parsing()
     print(config)
-    if config['WIDTH'] < 8 and config['HEIGHT'] < 6:
+    if cast(int, config['WIDTH']) < 8 and cast(int, config['HEIGHT']) < 6:
         print("the maze is too small to print the 42 logo")
 except (SurfaceError, CordonateEroor, ParsingError) as e:
     print(e)

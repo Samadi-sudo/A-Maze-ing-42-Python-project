@@ -1,9 +1,9 @@
 import subprocess
 
-_running_sounds = {}
+_running_sounds: dict[str, subprocess.Popen] = {}
 
 
-def play_song(sound_path):
+def play_song(sound_path: str) -> None:
     process = _running_sounds.get(sound_path)
 
     if process:
@@ -21,7 +21,7 @@ def play_song(sound_path):
         print(f"Sound Error: {e}")
 
 
-def stop_song(sound_path):
+def stop_song(sound_path: str) -> None:
     process = _running_sounds.get(sound_path)
     if process and process.poll() is None:
         process.terminate()
