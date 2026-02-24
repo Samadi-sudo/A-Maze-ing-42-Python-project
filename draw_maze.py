@@ -125,5 +125,6 @@ class MazeDrawer:
             offset_x = (self.CELL - w) // 2
             offset_y = (self.CELL - h) // 2
             self.m.mlx_put_image_to_window(
-                self.mlx_ptr, self.win_ptr, resized, px + offset_x, py + offset_y)
+                self.mlx_ptr,
+                self.win_ptr, resized, px + offset_x, py + offset_y)
         return resized

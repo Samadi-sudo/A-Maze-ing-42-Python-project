@@ -53,7 +53,8 @@ class Maze:
 
 
 class MazeGenerator:
-    def __init__(self, width: int, height: int, perfect: bool = True, seed: Optional[int] = None):
+    def __init__(self, width: int, height: int,
+                 perfect: bool = True, seed: Optional[int] = None):
         if width < 2 or height < 2:
             raise ValueError("Width and height must both be >= 2.")
         self.width = width
@@ -106,7 +107,7 @@ class MazeGenerator:
                     break
             if not moved:
                 stack.pop()
-        if self.perfect == False:
+        if self.perfect is False:
             self.make_imperfect(rng)
 
     def prims_algorithm(self, x: int, y: int):
@@ -149,7 +150,7 @@ class MazeGenerator:
                     self.moves.append((nx, ny))
             else:
                 del frontier[from_cell]
-        if self.perfect == False:
+        if self.perfect is False:
             self.make_imperfect(rng)
         return True
 
@@ -187,7 +188,7 @@ class MazeGenerator:
                     walls.append((x, y, 'S'))
 
         if self.seed is not None:
-                rng = random.Random(self.seed)
+            rng = random.Random(self.seed)
         else:
             rng = random
         rng.shuffle(walls)
@@ -203,7 +204,7 @@ class MazeGenerator:
                 self.maze.grid[ny][nx].remove(neighbor)
                 self.moves.append((nx, ny))
 
-        if self.perfect == False:
+        if self.perfect is False:
             self.make_imperfect(rng)
 
     def dfs_solution(self, entry, sorti):
@@ -250,7 +251,6 @@ class MazeGenerator:
                     self.maze.grid[ny][nx].visited = True
                     queue.append([(nx, ny), path + [(nx, ny)]])
         return []
-    
 
     def a_star_solution(self, entry: tuple, sorti: tuple):
         def ft_manhaten(pos: tuple, sorti: tuple):
@@ -279,7 +279,7 @@ class MazeGenerator:
                 if (nx, ny) == (x, y):
                     continue
                 new_g = g + 1
-                new_h = ft_manhaten((nx,ny), sorti)
+                new_h = ft_manhaten((nx, ny), sorti)
                 new_f = new_g + new_h
                 history.append((nx, ny))
                 open_list.append((new_f, new_g, (nx, ny), path + [(nx, ny)]))
@@ -287,7 +287,7 @@ class MazeGenerator:
         self.solution = []
         return history
 
-    def make_imperfect(self, rng = random):
+    def make_imperfect(self, rng=random):
         for y in range(self.height):
             for x in range(self.width):
                 if self.maze.grid[y][x].walls == N | E | S | W:
@@ -299,8 +299,9 @@ class MazeGenerator:
             x = rng.randint(0, self.width - 2)
             y = rng.randint(0, self.height - 2)
             direction = rng.choice(['E', 'S'])
-            if not self.maze.grid[y][x].visited and bin(self.maze.grid[y][x].walls).count('1') > 2:
-                nx, ny  = self.maze.carve(x, y, direction)
+            if (not self.maze.grid[y][x].visited
+               and bin(self.maze.grid[y][x].walls).count('1') > 2):
+                nx, ny = self.maze.carve(x, y, direction)
                 self.maze.grid[y][x].visited = True
                 if (nx, ny) != (x, y):
                     self.maze.grid[ny][nx].visited = True

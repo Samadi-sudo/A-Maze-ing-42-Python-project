@@ -82,29 +82,41 @@ def menu_ptr(mlx, mlx_ptr):
     def on_mouse(button, x, y, data):
         if button == 1:
             mlx.mlx_do_sync(mlx_ptr)
-            if find_area((x, y), lst_buttons[0][0], lst_buttons[0][1], 450, 60):
+            if find_area((x, y), lst_buttons[0][0],
+                         lst_buttons[0][1], 450, 60):
                 fill_rectangle(
-                    lst_buttons[0][0], lst_buttons[0][1], 450, 60, mlx, mlx_ptr, menu_ptr)
+                    lst_buttons[0][0], lst_buttons[0][1],
+                    450, 60, mlx, mlx_ptr, menu_ptr)
                 state['1'] = True
-            if find_area((x, y), lst_buttons[1][0], lst_buttons[1][1], 450, 60):
+            if find_area((x, y), lst_buttons[1][0],
+                         lst_buttons[1][1], 450, 60):
                 fill_rectangle(
-                    lst_buttons[1][0], lst_buttons[1][1], 450, 60, mlx, mlx_ptr, menu_ptr)
+                    lst_buttons[1][0], lst_buttons[1][1],
+                    450, 60, mlx, mlx_ptr, menu_ptr)
                 state['2'] = not state['2']
-            if find_area((x, y), lst_buttons[2][0], lst_buttons[2][1], 450, 60):
+            if find_area((x, y), lst_buttons[2][0],
+                         lst_buttons[2][1], 450, 60):
                 fill_rectangle(
-                    lst_buttons[2][0], lst_buttons[2][1], 450, 60, mlx, mlx_ptr, menu_ptr)
+                    lst_buttons[2][0], lst_buttons[2][1],
+                    450, 60, mlx, mlx_ptr, menu_ptr)
                 state['3'] = (state['3'] + 1) % 3
-            if find_area((x, y), lst_buttons[3][0], lst_buttons[3][1], 450, 60):
+            if find_area((x, y), lst_buttons[3][0],
+                         lst_buttons[3][1], 450, 60):
                 fill_rectangle(
-                    lst_buttons[3][0], lst_buttons[3][1], 450, 60, mlx, mlx_ptr, menu_ptr)
+                    lst_buttons[3][0], lst_buttons[3][1],
+                    450, 60, mlx, mlx_ptr, menu_ptr)
                 state['4'] = (state['4'] + 1) % 3
-            if find_area((x, y), lst_buttons[4][0], lst_buttons[4][1], 450, 60):
+            if find_area((x, y), lst_buttons[4][0],
+                         lst_buttons[4][1], 450, 60):
                 fill_rectangle(
-                    lst_buttons[4][0], lst_buttons[4][1], 450, 60, mlx, mlx_ptr, menu_ptr)
+                    lst_buttons[4][0], lst_buttons[4][1],
+                    450, 60, mlx, mlx_ptr, menu_ptr)
                 state['5'] = True
-            if find_area((x, y), lst_buttons[5][0], lst_buttons[5][1], 450, 60):
+            if find_area((x, y), lst_buttons[5][0],
+                         lst_buttons[5][1], 450, 60):
                 fill_rectangle(
-                    lst_buttons[5][0], lst_buttons[5][1], 450, 60, mlx, mlx_ptr, menu_ptr)
+                    lst_buttons[5][0], lst_buttons[5][1],
+                    450, 60, mlx, mlx_ptr, menu_ptr)
                 state['6'] = not state['6']
         print(f"Mouse Button {button} at ({x},{y})")
         return 0

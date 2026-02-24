@@ -84,7 +84,7 @@ if __name__ == "__main__":
     output_maze(maze_gen, OUTPUT_FILE, ENTRY, EXIT)
 
     def show_path(animation, color, take_prize=False):
-        if display['path'] == False or take_prize == True:
+        if display['path'] is False or take_prize is True:
             if state['4'] == 1:
                 algo = maze_gen.a_star_solution
                 history_annimation(5, animation, algo, 0xAF0000FF)
@@ -102,7 +102,7 @@ if __name__ == "__main__":
                 m.mlx_clear_window(mlx_ptr, win_ptr)
                 drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, color)
                 path_animation(5, animation)
-                
+
             display['path'] = True
         else:
             m.mlx_clear_window(mlx_ptr, win_ptr)
@@ -141,7 +141,7 @@ if __name__ == "__main__":
             maze_gen.kruskal_algorithm()
         else:
             maze_gen.prims_algorithm(ENTRY[0], ENTRY[1])
-        if state['6'] == True:
+        if state['6'] is True:
             gen_animation(2)
         else:
             m.mlx_clear_window(mlx_ptr, win_ptr)
@@ -172,6 +172,7 @@ if __name__ == "__main__":
         return 0
 
     def on_close(data):
+        sound.stop_song("./sound_effect/mouse/mouse-squeek.wav")
         m.mlx_loop_exit(mlx_ptr)
         return 0
 
