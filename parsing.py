@@ -28,7 +28,10 @@ def forbiden_cells(width, height):
                         (x + 1, y + 2),(x + 2, y + 2), (x + 3, y + 2)
 
     ]
-    return lst_2 + lst_4
+    if width > 8 and height > 6:
+        return lst_2 + lst_4
+    else:
+        return []
 
 def check_parsing(config:Dict[str, object]) -> None:
     try:
@@ -116,7 +119,10 @@ def parsing() -> Dict[str, object]:
     return config
 
 try:
-    print(parsing())
+    config = parsing()
+    print(config)
+    if config['WIDTH'] < 8 and config['HEIGHT'] < 6:
+        print("the maze is too small to print the 42 logo")
 except (SurfaceError, CordonateEroor, ParsingError) as e:
     print(e)
     sys.exit(1)
