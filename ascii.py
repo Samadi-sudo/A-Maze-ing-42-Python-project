@@ -4,7 +4,6 @@ import printer
 import time
 import os
 import platform
-import shutil
 import parsing
 import sound
 config = parsing.parsing()
