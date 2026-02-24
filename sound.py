@@ -6,8 +6,11 @@ _running_sounds = {}
 def play_song(sound_path):
     process = _running_sounds.get(sound_path)
 
-    if process and process.poll() is None:
-        return
+    if process:
+        if process.poll() is None:
+            return
+        else:
+            _running_sounds.pop(sound_path)
 
     try:
         process = subprocess.Popen(["cvlc", sound_path],
