@@ -6,8 +6,7 @@ from menu import menu_ptr
 import sound
 from output_gen import output_maze
 import signal
-
-signal.signal(signal.SIGINT, signal.SIG_IGN)
+import ascii_print.ascii
 
 config = parsing()
 WIDTH, HEIGHT = config['WIDTH'], config['HEIGHT']
@@ -17,14 +16,19 @@ EXIT = config['EXIT']
 SEED = config.get('seed')
 OUTPUT_FILE = config.get('OUTPUT_FILE')
 ALGORITHM = config.get('algorithm', 'dfs')
+display_mode = config.get('display_mode')
 colors = [0xFF00F0F0, 0xFF0000FF, 0xFFFF00FF]
 
 # create maze
 maze_gen = MazeGenerator(WIDTH, HEIGHT, PERFECT, SEED)
 maze = maze_gen.maze
-
+if display_mode == "ascii":
+    template = MazeGenerator(WIDTH, HEIGHT, PERFECT, SEED)
+    ascii_print.ascii.main(HEIGHT, WIDTH, ENTRY, EXIT,
+     OUTPUT_FILE, PERFECT, maze_gen, template, SEED, ALGORITHM)
 if __name__ == "__main__":
     # init mlx
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
     m = Mlx()
     mlx_ptr = m.mlx_init()
     _, screen_width, screen_height = m.mlx_get_screen_size(mlx_ptr)

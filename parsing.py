@@ -122,7 +122,7 @@ def parsing() -> Dict[str, object]:
                         if value.lower() not in ("true", "false", '1', '0'):
                             raise ParsingError
                         config[key] = value.lower() == "true" or value == '1'
-                    elif key in ("algorithm", "OUTPUT_FILE"):
+                    elif key in ("algorithm", "OUTPUT_FILE", "display_mode"):
                         config[key] = value
                     else:
                         raise ParsingError

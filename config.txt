@@ -5,5 +5,5 @@ EXIT=19,19
 OUTPUT_FILE=maze.txt
 PERFECT=0
 #seed=333
-algorithm= 
-#display_mode = MLX
+algorithm= prims
+display_mode = ascii

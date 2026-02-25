@@ -2,19 +2,18 @@ import sys
 from pathlib import Path
 root_dir = Path(__file__).resolve().parent.parent
 sys.path.append(str(root_dir))
-from mazegen_package.mazegen import MazeGenerator
+# from mazegen_package.mazegen import MazeGenerator
 from output_gen import output_maze
-import printer
+from ascii_print import printer
 import time
 import os
 import platform
-import parsing
+# import parsing
 import sound
-config = parsing.parsing()
+# config = parsing.parsing()
 
 
-def animation(hestory, height, width, entry, exit, anim, maze, mesage):
-    template = MazeGenerator(height, width, entry, exit)
+def animation(hestory, height, width, entry, exit, anim, maze, mesage, template):
     template.p42
     t_maze = template.maze.grid
     if anim:
@@ -44,7 +43,7 @@ def desplay(choice, grid, path, ENTRY, EXIT, mesage, color_walls, color_42, anim
         choice = int(input('Choice ?(1-9): '))
     return choice
 
-def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT, SEED=None, algo="kruskal"):
+def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT,maze, template, SEED=None, algo="kruskal"):
     choice = 1
     anim = False
     color_walls = 0
@@ -55,7 +54,7 @@ def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT, SEED=None, algo="krus
     while choice != 9:
         try:
             if choice == 1:
-                maze = MazeGenerator(HEIGHT, WIDTH, PERFECT, SEED)
+                maze.__init__(WIDTH, HEIGHT, PERFECT, SEED)
                 if WIDTH < 6 or WIDTH < 8:
                     mesage = "Cannot place '42' pattern without collision"
                 else:
@@ -78,7 +77,7 @@ def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT, SEED=None, algo="krus
                     maze.dfs_solution(ENTRY, EXIT)
                 else:
                     maze.a_star_solution(ENTRY, EXIT)
-                animation(hestory, HEIGHT, WIDTH, ENTRY, EXIT, anim, grid,mesage)
+                animation(hestory, HEIGHT, WIDTH, ENTRY, EXIT, anim, grid,mesage, template)
                 solve = maze.solution
                 output_maze(maze, OUTPUT_FILE, ENTRY, EXIT)
                 choice = int(input('Choice ?(1-9): '))
@@ -133,13 +132,13 @@ def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT, SEED=None, algo="krus
             elif choice == 8:
                 if solve:
                     for i in solve:
-                        sound.play_song("dog.wav")
+                        sound.play_song("./sound_effect/dog/dog.wav")
                         printer.print_maze(grid, path, i, EXIT, mesage, color_walls, color_42, anim)
                         time.sleep(0.3)
-                    sound.stop_song("dog.wav")
-                    sound.play_song("eat.wav")
+                    sound.stop_song("./sound_effect/dog/dog.wav")
+                    sound.play_song("./sound_effect/dog/eat.wav")
                     time.sleep(1.5)
-                    sound.stop_song("eat.wav")
+                    sound.stop_song("./sound_effect/dog/eat.wav")
                     choice = int(input('Choice ?(1-9): '))
             else:
                 
@@ -147,13 +146,15 @@ def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT, SEED=None, algo="krus
                                  color_walls, color_42, anim)
         except (ValueError, KeyboardInterrupt, EOFError):
             choice = 127
+            path = None
     if platform.system() == "Windows":
         os.system("clc")
     else:
         os.system("clear")
     print("Thanks, see you soon 🤗")
+    sys.exit()
 
 
 #main(9,9,(0,0),(8,8),None,None,None,"kru")
-main(config["HEIGHT"], config["WIDTH"], config["ENTRY"], config["EXIT"],
-     config["OUTPUT_FILE"], config["PERFECT"], config.get('seed', None), config.get("algorithm", "kruskal"))
+# main(config["HEIGHT"], config["WIDTH"], config["ENTRY"], config["EXIT"],
+#      config["OUTPUT_FILE"], config["PERFECT"], config.get('seed', None), config.get("algorithm", "kruskal"))
