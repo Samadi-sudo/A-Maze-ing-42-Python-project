@@ -1,19 +1,23 @@
+from typing import Any
 from mazegen_package.mazegen import N, E, S, W
 import tkinter as tk
 import os
 
 
-def hline(mlx, mlx_ptr, img_ptr, x1, x2, y, color):
+def hline(mlx: Any, mlx_ptr: Any, img_ptr: Any, x1: int,
+          x2: int, y: int, color: Any) -> None:
     for x in range(x1, x2):
         mlx.mlx_pixel_put(mlx_ptr, img_ptr, x, y, color)
 
 
-def vline(mlx, mlx_ptr, img_ptr, x, y1, y2, color):
+def vline(mlx: Any, mlx_ptr: Any, img_ptr: Any,
+          x: int, y1: int, y2: int, color: Any) -> None:
     for y in range(y1, y2):
         mlx.mlx_pixel_put(mlx_ptr, img_ptr, x, y, color)
 
 
-def draw_cell(mlx, mlx_ptr, img_ptr, cell, x, y, WALL_COLOR, CELL):
+def draw_cell(mlx: Any, mlx_ptr: Any, img_ptr: Any, cell: Any,
+              x: int, y: int, WALL_COLOR: Any, CELL: int) -> None:
     px = x * CELL
     py = y * CELL
 
@@ -30,7 +34,8 @@ def draw_cell(mlx, mlx_ptr, img_ptr, cell, x, y, WALL_COLOR, CELL):
         vline(mlx, mlx_ptr, img_ptr, px, py, py + CELL, WALL_COLOR)
 
 
-def fill_cell(mlx, mlx_ptr, img_ptr, x, y, color, CELL):
+def fill_cell(mlx: Any, mlx_ptr: Any, img_ptr: Any,
+              x: int, y: int, color: Any, CELL: int) -> None:
     px = x * CELL
     py = y * CELL
     for i in range(px+2, px + CELL-1):
@@ -38,7 +43,8 @@ def fill_cell(mlx, mlx_ptr, img_ptr, x, y, color, CELL):
             mlx.mlx_pixel_put(mlx_ptr, img_ptr, i, j, color)
 
 
-def draw_42(mlx, mlx_ptr, img_ptr, color, centre, maze, CELL):
+def draw_42(mlx: Any, mlx_ptr: Any, img_ptr: Any, color: Any,
+            centre: tuple, maze: Any, CELL: int) -> Any:
     x, y = centre
     lst_4 = [
         (x-3, y-2),
@@ -65,7 +71,7 @@ def draw_42(mlx, mlx_ptr, img_ptr, color, centre, maze, CELL):
     return maze
 
 
-def resize_image_to_fit(input_path, size):
+def resize_image_to_fit(input_path: str, size: int) -> str:
     root = tk.Tk()
     root.withdraw()  # close the window
 
@@ -88,13 +94,14 @@ def resize_image_to_fit(input_path, size):
 
 
 class MazeDrawer:
-    def __init__(self, m, mlx_ptr, win_ptr, CELL):
+    def __init__(self, m: Any, mlx_ptr: Any, win_ptr: Any, CELL: int) -> None:
         self.m = m
         self.mlx_ptr = mlx_ptr
         self.win_ptr = win_ptr
         self.CELL = CELL
 
-    def draw_maze(self, WIDTH, HEIGHT, maze, color):
+    def draw_maze(self, WIDTH: int, HEIGHT: int,
+                  maze: Any, color: Any) -> None:
         for y in range(maze.h):
             for x in range(maze.w):
                 draw_cell(self.m, self.mlx_ptr, self.win_ptr,
@@ -104,7 +111,7 @@ class MazeDrawer:
             draw_42(self.m, self.mlx_ptr, self.win_ptr, color,
                     (WIDTH // 2, HEIGHT // 2), maze, self.CELL)
 
-    def draw_cell(self, maze, x, y, color):
+    def draw_cell(self, maze: Any, x: int, y: int, color: Any) -> None:
         tmp = maze.grid[y][x].walls
         maze.grid[y][x].walls = 15
         draw_cell(self.m, self.mlx_ptr, self.win_ptr,
@@ -113,7 +120,7 @@ class MazeDrawer:
         draw_cell(self.m, self.mlx_ptr, self.win_ptr,
                   maze.grid[y][x], x, y, color ^ 0x00FF0F0F, self.CELL)
 
-    def draw_image(self, x, y, player):
+    def draw_image(self, x: int, y: int, player: str) -> Any:
         resized_path = resize_image_to_fit(player, self.CELL)
 
         resized, w, h = self.m.mlx_png_file_to_image(

@@ -13,7 +13,7 @@ def play_song(sound_path: str) -> None:
             _running_sounds.pop(sound_path)
 
     try:
-        process = subprocess.Popen(["cvlc", "--play-and-exit",sound_path],
+        process = subprocess.Popen(["cvlc", "--play-and-exit", sound_path],
                                    stdout=subprocess.DEVNULL,
                                    stderr=subprocess.DEVNULL)
         _running_sounds[sound_path] = process

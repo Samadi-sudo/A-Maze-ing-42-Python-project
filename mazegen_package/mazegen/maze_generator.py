@@ -1,5 +1,5 @@
 import random
-from typing import Optional
+from typing import Optional, Any
 
 N, E, S, W = 1, 2, 4, 8
 
@@ -12,20 +12,20 @@ DIRS = {
 
 
 class Cell:
-    def __init__(self):
+    def __init__(self) -> None:
         self.walls = N | E | S | W
         self.visited = False
 
-    def remove(self, wall_bit):
+    def remove(self, wall_bit: int) -> None:
         self.walls &= ~wall_bit
 
 
 class Maze:
-    def __init__(self, w, h):
+    def __init__(self, w: int, h: int) -> None:
         self.w, self.h = w, h
         self.grid = [[Cell() for _ in range(w)] for _ in range(h)]
 
-    def carve(self, x, y, direction):
+    def carve(self, x: int, y: int, direction: str) -> tuple:
         if direction not in DIRS:
             raise ValueError("bad direction")
         dx, dy, wall_here, wall_there = DIRS[direction]
@@ -38,7 +38,7 @@ class Maze:
         self.grid[ny][nx].remove(wall_there)
         return (nx, ny)
 
-    def moved(self, x, y, direction):
+    def moved(self, x: int, y: int, direction: str) -> tuple:
         if direction not in DIRS:
             raise ValueError("Bad direction")
         dx, dy, wall_here, _ = DIRS[direction]
@@ -54,7 +54,7 @@ class Maze:
 
 class MazeGenerator:
     def __init__(self, width: int, height: int,
-                 perfect: bool = True, seed: Optional[int] = None):
+                 perfect: bool = True, seed: Optional[int] = None) -> None:
         if width < 2 or height < 2:
             raise ValueError("Width and height must both be >= 2.")
         self.width = width
@@ -62,10 +62,10 @@ class MazeGenerator:
         self.perfect = perfect
         self.seed = seed
         self.maze = Maze(width, height)
-        self.solution = []
+        self.solution: list[tuple[int, int]] = []
         self.moves: list[tuple[int, int]] = []
 
-    def p42(self):
+    def p42(self) -> None:
         cell_closed = [
             (-1, 0), (-2, 0), (-3, 0), (-3, -1),
             (-3, -2), (-1, 1), (-1, 2),
@@ -82,7 +82,7 @@ class MazeGenerator:
             if 0 <= new_x < self.width and 0 <= new_y < self.height:
                 self.maze.grid[new_y][new_x].visited = True
 
-    def dfs_backtracking_recursive(self, x: int, y: int):
+    def dfs_backtracking_recursive(self, x: int, y: int) -> bool:
         """Generate maze using Depth-First Search with backtracking."""
         if self.maze.grid[y][x].visited:
             return False
@@ -103,14 +103,14 @@ class MazeGenerator:
                 self.dfs_backtracking_recursive(nx, ny)
         return True
 
-    def dfs_backtracking_iterative(self, x: int, y: int):
+    def dfs_backtracking_iterative(self, x: int, y: int) -> None:
         stack = [(x, y)]
         while stack:
             x, y = stack[-1]
             self.maze.grid[y][x].visited = True
             directions = ["N", "E", "S", "W"]
             if self.seed is not None:
-                rng = random.Random(self.seed + x * self.height + y)
+                rng: Any = random.Random(self.seed + x * self.height + y)
             else:
                 rng = random
             rng.shuffle(directions)
@@ -127,7 +127,7 @@ class MazeGenerator:
         if self.perfect is False:
             self.make_imperfect(rng)
 
-    def prims_algorithm(self, x: int, y: int):
+    def prims_algorithm(self, x: int, y: int) -> bool:
         """Generate maze using Prim's algorithm."""
         frontier = {}
 
@@ -140,7 +140,7 @@ class MazeGenerator:
 
         while frontier:
             if self.seed is not None:
-                rng = random.Random(self.seed + len(frontier))
+                rng: Any = random.Random(self.seed + len(frontier))
                 from_cell = rng.choice(list(frontier.keys()))
             else:
                 from_cell = random.choice(list(frontier.keys()))
@@ -171,7 +171,7 @@ class MazeGenerator:
             self.make_imperfect(rng)
         return True
 
-    def kruskal_algorithm(self):
+    def kruskal_algorithm(self) -> None:
         parent = dict()
         cell_to_root = {}
         for y in range(self.height):
@@ -179,10 +179,10 @@ class MazeGenerator:
                 parent[(x, y)] = [(x, y)]
                 cell_to_root[(x, y)] = (x, y)
 
-        def ft_find(pos: tuple):
+        def ft_find(pos: tuple) -> tuple:
             return (cell_to_root[pos])
 
-        def ft_union(a: tuple, b: tuple):
+        def ft_union(a: tuple, b: tuple) -> bool:
             root_a = ft_find(a)
             root_b = ft_find(b)
             if root_a == root_b:
@@ -205,7 +205,7 @@ class MazeGenerator:
                     walls.append((x, y, 'S'))
 
         if self.seed is not None:
-            rng = random.Random(self.seed)
+            rng: Any = random.Random(self.seed)
         else:
             rng = random
         rng.shuffle(walls)
@@ -224,7 +224,7 @@ class MazeGenerator:
         if self.perfect is False:
             self.make_imperfect(rng)
 
-    def dfs_solution(self, entry, sorti):
+    def dfs_solution(self, entry: tuple, sorti: tuple) -> list:
         stack = []
         stack.append(entry)
         history = []
@@ -249,10 +249,10 @@ class MazeGenerator:
         self.solution = stack
         return history
 
-    def bfs_solution(self, entry, sorti):
-        queue = [[entry, [entry]]]
+    def bfs_solution(self, entry: tuple, sorti: tuple) -> list:
+        queue: list = [[entry, [entry]]]
         direction = ['N', 'E', 'S', 'W']
-        history = []
+        history: list = []
         self.maze.grid[entry[1]][entry[0]].visited = True
         while queue:
             current, path = queue.pop(0)
@@ -269,15 +269,15 @@ class MazeGenerator:
                     queue.append([(nx, ny), path + [(nx, ny)]])
         return []
 
-    def a_star_solution(self, entry: tuple, sorti: tuple):
-        def ft_manhaten(pos: tuple, sorti: tuple):
+    def a_star_solution(self, entry: tuple, sorti: tuple) -> list:
+        def ft_manhaten(pos: tuple, sorti: tuple) -> Any:
             xa, ya = pos
             xb, yb = sorti
             return (abs(xb - xa) + abs(yb - ya))
 
         open_list = [(0, 0, entry, [entry])]
         directions = ['N', 'E', 'S', 'W']
-        history = []
+        history: list = []
         while open_list:
             best_index = 0
             for i in range(1, len(open_list)):
@@ -304,7 +304,7 @@ class MazeGenerator:
         self.solution = []
         return history
 
-    def make_imperfect(self, rng=random):
+    def make_imperfect(self, rng: Any=random) -> None:
         for y in range(self.height):
             for x in range(self.width):
                 if self.maze.grid[y][x].walls == N | E | S | W:

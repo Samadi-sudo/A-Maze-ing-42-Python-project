@@ -7,15 +7,16 @@ import sound
 from output_gen import output_maze
 import signal
 import ascii_print.ascii
+from typing import cast, Any
 
 config = parsing()
-WIDTH, HEIGHT = config['WIDTH'], config['HEIGHT']
-PERFECT = config['PERFECT']
-ENTRY = config['ENTRY']
-EXIT = config['EXIT']
-SEED = config.get('seed')
-OUTPUT_FILE = config.get('OUTPUT_FILE')
-ALGORITHM = config.get('algorithm', 'dfs')
+WIDTH, HEIGHT = cast(int, config['WIDTH']), cast(int, config['HEIGHT'])
+PERFECT = cast(bool, config['PERFECT'])
+ENTRY = cast(tuple, config['ENTRY'])
+EXIT = cast(tuple, config['EXIT'])
+SEED = cast(int, config.get('seed'))
+OUTPUT_FILE = cast(str, config.get('OUTPUT_FILE'))
+ALGORITHM = cast(str, config.get('algorithm', 'dfs'))
 display_mode = config.get('display_mode')
 colors = [0xFF00F0F0, 0xFF0000FF, 0xFFFF00FF]
 
@@ -25,7 +26,8 @@ maze = maze_gen.maze
 if display_mode == "ascii":
     template = MazeGenerator(WIDTH, HEIGHT, PERFECT, SEED)
     ascii_print.ascii.main(HEIGHT, WIDTH, ENTRY, EXIT,
-     OUTPUT_FILE, PERFECT, maze_gen, template, SEED, ALGORITHM)
+                           OUTPUT_FILE, PERFECT, maze_gen,
+                           template, SEED, ALGORITHM)
 if __name__ == "__main__":
     # init mlx
     signal.signal(signal.SIGINT, signal.SIG_IGN)
@@ -44,13 +46,14 @@ if __name__ == "__main__":
     drawer = MazeDrawer(m, mlx_ptr, win_ptr, CELL)
     drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, colors[state['3']])
 
-    def gen_animation(speed):
+    def gen_animation(speed: int) -> None:
         for x, y in maze_gen.moves:
             drawer.draw_cell(maze_gen.maze, x, y, colors[state['3']])
             if ((y % speed*2 == 0) and (x % speed*2 == 0)):
                 m.mlx_do_sync(mlx_ptr)
 
-    def history_annimation(speed, animation, algo, color):
+    def history_annimation(speed: int, animation: int,
+                           algo: Any, color: Any) -> None:
         history = algo(ENTRY, EXIT)
         if animation:
             for x, y in history:
@@ -58,14 +61,14 @@ if __name__ == "__main__":
                 if ((y % speed * 2 == 0) and (x % speed * 2 == 0)):
                     m.mlx_do_sync(mlx_ptr)
 
-    def history_annimation_dfs(speed, animation):
+    def history_annimation_dfs(speed: int, animation: int) -> None:
         history = maze_gen.dfs_solution(ENTRY, EXIT)
         for x, y, color in history:
             fill_cell(m, mlx_ptr, win_ptr, x, y, color, CELL)
             if ((y % speed * 2 == 0) and (x % speed * 2 == 0) and animation):
                 m.mlx_do_sync(mlx_ptr)
 
-    def path_animation(speed, animation):
+    def path_animation(speed: int, animation: Any) -> None:
         path = maze_gen.solution
         for x, y in path:
             fill_cell(m, mlx_ptr, win_ptr, x, y, 0xAF0FFF00, CELL)
@@ -87,7 +90,8 @@ if __name__ == "__main__":
     m.mlx_do_sync(mlx_ptr)
     output_maze(maze_gen, OUTPUT_FILE, ENTRY, EXIT)
 
-    def show_path(animation, color, take_prize=False):
+    def show_path(animation: int, color: Any,
+                  take_prize: bool = False) -> None:
         if display['path'] is False or take_prize is True:
             if state['4'] == 1:
                 algo = maze_gen.a_star_solution
@@ -114,12 +118,12 @@ if __name__ == "__main__":
             m.mlx_do_sync(mlx_ptr)
             display['path'] = False
 
-    def take_prize():
+    def take_prize() -> None:
         sound.play_song("./sound_effect/start.wav")
         sound.stop_song("./sound_effect/mouse/mouse-squeek.wav")
         show_path(False, colors[state['3']], True)
         drawer.draw_image(EXIT[0], EXIT[1], "./images/mouse/cheese.png")
-        prev = None
+        prev: Any = None
         for x, y in maze_gen.solution:
             if prev:
                 fill_cell(m, mlx_ptr, win_ptr,
@@ -134,8 +138,8 @@ if __name__ == "__main__":
         drawer.draw_image(x, y, "./images/mouse/Cute Mouse_Eating_Cheese.png")
         sound.play_song("./sound_effect/mouse/mouse-squeek.wav")
 
-    def regenerate(color):
-        maze_gen.__init__(WIDTH, HEIGHT, PERFECT, SEED)
+    def regenerate(color: Any) -> None:
+        type(maze_gen).__init__(maze_gen, WIDTH, HEIGHT, PERFECT, SEED)
         m.mlx_clear_window(mlx_ptr, win_ptr)
         drawer.draw_maze(WIDTH, HEIGHT, maze_gen.maze, color)
         m.mlx_do_sync(mlx_ptr)
@@ -157,7 +161,7 @@ if __name__ == "__main__":
         if SEED is None:
             output_maze(maze_gen, OUTPUT_FILE, ENTRY, EXIT)
 
-    def on_loop(data):
+    def on_loop(data: Any) -> Any:
         if state['1']:
             regenerate(colors[state['3']])
             state['1'] = False
@@ -175,7 +179,7 @@ if __name__ == "__main__":
             state['5'] = False
         return 0
 
-    def on_close(data):
+    def on_close(data: Any) -> Any:
         sound.stop_song("./sound_effect/mouse/mouse-squeek.wav")
         m.mlx_loop_exit(mlx_ptr)
         return 0
