@@ -13,6 +13,9 @@ keywords = ["maze", "generator", "algorithm", "42"]
 [project.urls]
 Homepage = "https://github.com/Samadi-sudo/A-Maze-ing-42-Python-project"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["mazegen*"]
+[tool.setuptools]
+packages = ["mazegen_package", "mazegen_package.mazegen"]
+
+[tool.setuptools.package-dir]
+"mazegen_package" = "."
+"mazegen_package.mazegen" = "mazegen"
