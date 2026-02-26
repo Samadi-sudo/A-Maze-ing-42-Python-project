@@ -3,6 +3,7 @@ import platform
 
 
 class Color:
+    """An class for storing the static state of wall colors and patterns."""
     walls = 0
     block = 0
 
@@ -12,6 +13,11 @@ def print_maze(maze: list, path: list | None = None,
                message: str | None = None, color_wa: int | None = None,
                color_42: int | None = None,
                animation: bool | None = None) -> str:
+    """ Draws the maze in the terminal with the path display and
+    interactive menu.
+    The function uses a bitwise system (N=1, E=2, S=4, W=8) to determine
+    the walls present
+    in each cell, and automatically clears the screen before drawing."""
     N, E, S, W = 1, 2, 4, 8
     if platform.system() == 'Windows':
         os.system('cls')
@@ -39,6 +45,8 @@ def print_maze(maze: list, path: list | None = None,
     draw = ""
 
     def is_in_path(x: int,  y: int) -> bool:
+        """Checks whether the given cell is part of
+        the current solution path."""
         if x >= width or y >= height:
             return False
         return (x, y) in path

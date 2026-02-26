@@ -11,6 +11,8 @@ import sound
 def animation(hestory: list, height: int, width: int, entry: tuple,
               exit: tuple, anim: bool, maze: list, mesage: str,
               template: Any) -> bool:
+    """ Displays the process of creating the maze step
+        by step as an animation or no"""
     template.p42
     t_maze = template.maze.grid
     if anim:
@@ -25,20 +27,24 @@ def animation(hestory: list, height: int, width: int, entry: tuple,
 
 def path_animation(path: list, grid: list, entry: tuple, exit: tuple,
                    anim: bool = True, mesage: str = "") -> bool:
+    """Displays the process of solving the
+       maze (path) as an animation or no."""
     if anim:
         for i in range(len(path)):
             solve = path[:i+1]
             printer.print_maze(grid, solve, entry, exit, mesage,
-                               None, None, False)
+                               None, None, anim)
             time.sleep(0.3)
     else:
-        printer.print_maze(grid, path, entry, exit, mesage, None, None, False)
+        printer.print_maze(grid, path, entry, exit, mesage, None, None, anim)
     return (anim)
 
 
 def desplay(choice: int, grid: list, path: list | None, ENTRY: tuple,
             EXIT: tuple, mesage: str, color_walls: int,
             color_42: int, anim: bool) -> int:
+    """Manages the display interface and updates options after
+      each selection from the menu"""
     if choice not in [1, 2, 3, 4, 5, 6, 7, 8]:
         printer.print_maze(grid, path, ENTRY, EXIT, mesage, color_walls,
                            color_42, anim)
@@ -56,6 +62,9 @@ def desplay(choice: int, grid: list, path: list | None, ENTRY: tuple,
 def main(HEIGHT: int, WIDTH: int, ENTRY: tuple, EXIT: tuple,
          OUTPUT_FILE: str, PERFECT: bool, maze: Any, template: Any,
          SEED: int | None = None, algo: str = "kruskal") -> Any:
+    """    This function manages: maze generation, color changes,
+    sound activation, selection of  generation algorithms (Kruskal,
+    Prim's, DFS) and solution algorithms (A*, BFS, DFS)"""
     choice = 1
     anim = False
     color_walls = 0
@@ -91,7 +100,6 @@ def main(HEIGHT: int, WIDTH: int, ENTRY: tuple, EXIT: tuple,
                     maze.a_star_solution(ENTRY, EXIT)
                 animation(hestory, HEIGHT, WIDTH, ENTRY, EXIT, anim,
                           grid, mesage, template)
-                solve = maze.solution
                 output_maze(maze, OUTPUT_FILE, ENTRY, EXIT)
                 choice = int(input('Choice ?(1-9): '))
                 continue
@@ -144,6 +152,7 @@ def main(HEIGHT: int, WIDTH: int, ENTRY: tuple, EXIT: tuple,
                     solve_algo = 1
                     choice = 127
             elif choice == 8:
+                solve = maze.solution
                 if solve:
                     for i in solve:
                         sound.play_song("./sound_effect/dog/dog.wav")
