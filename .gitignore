@@ -6,3 +6,4 @@ maze.txt
 *.egg-info/
 dist/
 build/
+.obsidian
