@@ -47,12 +47,12 @@ print(gen.solution)
 MazeGenerator(width, height, perfect=True, seed=None)
 ```
 
-|Parameter|Type|Required|Description|
-|---|---|---|---|
-|`width`|`int`|Yes|Number of columns. Must be >= 2.|
-|`height`|`int`|Yes|Number of rows. Must be >= 2.|
-|`perfect`|`bool`|No|`True` = one solution (default). `False` = multiple solutions.|
-|`seed`|`int\|None`|No|Fixed seed for reproducible mazes. `None` = random each time.|
+| Parameter | Type        | Required | Description                                                    |
+| --------- | ----------- | -------- | -------------------------------------------------------------- |
+| `width`   | `int`       | Yes      | Number of columns. Must be >= 2.                               |
+| `height`  | `int`       | Yes      | Number of rows. Must be >= 2.                                  |
+| `perfect` | `bool`      | No       | `True` = one solution (default). `False` = multiple solutions. |
+| `seed`    | `int\|None` | No       | Fixed seed for reproducible mazes. `None` = random each time.  |
 
 ---
 
@@ -60,7 +60,7 @@ MazeGenerator(width, height, perfect=True, seed=None)
 
 After instantiating `MazeGenerator`, call one of the following to generate the maze. All generators accept a starting cell `(x, y)` (except Kruskal which uses no start point).
 
-### DFS — Depth-First Search (iterative, recommended)
+### DFS : Depth-First Search (iterative, recommended)
 
 ```python
 gen.dfs_backtracking_iterative(x=0, y=0)
@@ -68,7 +68,7 @@ gen.dfs_backtracking_iterative(x=0, y=0)
 
 Produces long winding corridors. Stack-safe for large grids. This is the default algorithm.
 
-### DFS — Depth-First Search (recursive)
+### DFS : Depth-First Search (recursive)
 
 ```python
 gen.dfs_backtracking_recursive(x=0, y=0)
@@ -114,7 +114,7 @@ history = gen.a_star_solution(entry=(0, 0), sorti=(9, 9))
 
 Uses the Manhattan distance heuristic. Finds the shortest path efficiently.
 
-### BFS — Breadth-First Search
+### BFS : Breadth-First Search
 
 ```python
 history = gen.bfs_solution(entry=(0, 0), sorti=(9, 9))
@@ -122,7 +122,7 @@ history = gen.bfs_solution(entry=(0, 0), sorti=(9, 9))
 
 Guarantees the shortest path. Explores all directions evenly.
 
-### DFS — Depth-First Search
+### DFS : Depth-First Search
 
 ```python
 history = gen.dfs_solution(entry=(0, 0), sorti=(9, 9))
@@ -211,21 +211,43 @@ A cell with `walls == 15` (i.e. `N|E|S|W`) has all four walls intact (isolated c
 
 ## Building from Source
 
+The `pyproject.toml` lives inside the `mazegen_package` folder alongside the source code. It uses `package-dir` to tell setuptools how to map the installed package names to the local folder structure:
+
+```toml
+[tool.setuptools]
+packages = ["mazegen_package", "mazegen_package.mazegen"]
+
+[tool.setuptools.package-dir]
+"mazegen_package" = "."
+"mazegen_package.mazegen" = "mazegen"
+```
+
+This means when someone installs the wheel, `mazegen_package` maps to the root of `mazegen_package/` and `mazegen_package.mazegen` maps to `mazegen_package/mazegen/`. So `from mazegen_package import MazeGenerator` works whether the user has the folder locally or only the installed wheel.
+
+To build:
+
 ```bash
 # Install build tools
-pip install build
+pip3 install build setuptools>=68
 
-# Build wheel and sdist
-python -m build
+# Build from inside the mazegen_package folder
+cd mazegen_package
+python3 -m build --no-isolation
 
-# Output will be in dist/
+# Output will be in mazegen_package/dist/
 # mazegen-1.0.0-py3-none-any.whl
 # mazegen-1.0.0.tar.gz
+```
+
+To install:
+
+```bash
+pip3 install mazegen_package/dist/mazegen-1.0.0-py3-none-any.whl
 ```
 
 ---
 
 ## Authors
 
-- **abantari** — DFS, Prim's generator, DFS & BFS solvers
-- **hrabh** — Kruskal generator, A* solver
+- **abantari** — DFS, Prim's generator, DFS & BFS solvers, Mlx display
+- **hrabh** — Kruskal generator, A* solver, ASCII display
