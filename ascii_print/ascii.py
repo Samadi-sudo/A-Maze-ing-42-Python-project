@@ -1,49 +1,61 @@
 import sys
-from pathlib import Path
-root_dir = Path(__file__).resolve().parent.parent
-sys.path.append(str(root_dir))
-# from mazegen_package.mazegen import MazeGenerator
+import os
+import time
+import platform
+from typing import Any
 from output_gen import output_maze
 from ascii_print import printer
-import time
-import os
-import platform
-# import parsing
 import sound
-# config = parsing.parsing()
 
 
-def animation(hestory, height, width, entry, exit, anim, maze, mesage, template):
+def animation(hestory: list, height: int, width: int, entry: tuple,
+              exit: tuple, anim: bool, maze: list, mesage: str,
+              template: Any) -> bool:
     template.p42
     t_maze = template.maze.grid
     if anim:
         for x, y in hestory:
             t_maze[y][x] = maze[y][x]
-            printer.print_maze(t_maze, None, entry, exit, None, None, None, False)
+            printer.print_maze(t_maze, None, entry, exit, None,
+                               None, None, False)
             time.sleep(0.3)
     printer.print_maze(maze, None, entry, exit, mesage, None, None, False)
+    return (anim)
 
-def path_animation(path, grid, entry, exit, anim=True, mesage=""):
+
+def path_animation(path: list, grid: list, entry: tuple, exit: tuple,
+                   anim: bool = True, mesage: str = "") -> bool:
     if anim:
         for i in range(len(path)):
             solve = path[:i+1]
-            printer.print_maze(grid, solve, entry, exit, mesage, None, None, False)
+            printer.print_maze(grid, solve, entry, exit, mesage,
+                               None, None, False)
             time.sleep(0.3)
     else:
         printer.print_maze(grid, path, entry, exit, mesage, None, None, False)
-def desplay(choice, grid, path, ENTRY, EXIT, mesage, color_walls, color_42, anim):
+    return (anim)
+
+
+def desplay(choice: int, grid: list, path: list | None, ENTRY: tuple,
+            EXIT: tuple, mesage: str, color_walls: int,
+            color_42: int, anim: bool) -> int:
     if choice not in [1, 2, 3, 4, 5, 6, 7, 8]:
-        printer.print_maze(grid, path, ENTRY, EXIT, mesage, color_walls, color_42, anim)
+        printer.print_maze(grid, path, ENTRY, EXIT, mesage, color_walls,
+                           color_42, anim)
         print("The option is incorrect 😵")
         choice = int(input('Choice ?(1-9): '))
     elif choice == 9:
         return 9
     else:
-        printer.print_maze(grid, path, ENTRY, EXIT, mesage, color_walls, color_42, anim)
+        printer.print_maze(grid, path, ENTRY, EXIT, mesage, color_walls,
+                           color_42, anim)
         choice = int(input('Choice ?(1-9): '))
     return choice
 
-def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT,maze, template, SEED=None, algo="kruskal"):
+
+def main(HEIGHT: int, WIDTH: int, ENTRY: tuple, EXIT: tuple,
+         OUTPUT_FILE: str, PERFECT: bool, maze: Any, template: Any,
+         SEED: int | None = None, algo: str = "kruskal") -> Any:
     choice = 1
     anim = False
     color_walls = 0
@@ -77,7 +89,8 @@ def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT,maze, template, SEED=N
                     maze.dfs_solution(ENTRY, EXIT)
                 else:
                     maze.a_star_solution(ENTRY, EXIT)
-                animation(hestory, HEIGHT, WIDTH, ENTRY, EXIT, anim, grid,mesage, template)
+                animation(hestory, HEIGHT, WIDTH, ENTRY, EXIT, anim,
+                          grid, mesage, template)
                 solve = maze.solution
                 output_maze(maze, OUTPUT_FILE, ENTRY, EXIT)
                 choice = int(input('Choice ?(1-9): '))
@@ -114,7 +127,8 @@ def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT,maze, template, SEED=N
                 choice = desplay(choice, grid, path, ENTRY, EXIT, mesage,
                                  color_walls, color_42, anim)
             elif choice == 6:
-                a = int(input("1:Prim's algorithm 2:Kruskal's algorithm 3:dfs algorithm"))
+                a = int(input("1:Prim's algorithm 2:Kruskal's algorithm"
+                              " 3:dfs algorithm"))
                 if a in [1, 2, 3]:
                     algos = ["prims", "kruskal", "dfs"]
                     algo = algos[a-1]
@@ -133,7 +147,8 @@ def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT,maze, template, SEED=N
                 if solve:
                     for i in solve:
                         sound.play_song("./sound_effect/dog/dog.wav")
-                        printer.print_maze(grid, path, i, EXIT, mesage, color_walls, color_42, anim)
+                        printer.print_maze(grid, path, i, EXIT, mesage,
+                                           color_walls, color_42, anim)
                         time.sleep(0.3)
                     sound.stop_song("./sound_effect/dog/dog.wav")
                     sound.play_song("./sound_effect/dog/eat.wav")
@@ -141,7 +156,6 @@ def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT,maze, template, SEED=N
                     sound.stop_song("./sound_effect/dog/eat.wav")
                     choice = int(input('Choice ?(1-9): '))
             else:
-                
                 choice = desplay(choice, grid, path, ENTRY, EXIT, mesage,
                                  color_walls, color_42, anim)
         except (ValueError, KeyboardInterrupt, EOFError):
@@ -153,8 +167,9 @@ def main(HEIGHT, WIDTH, ENTRY, EXIT, OUTPUT_FILE, PERFECT,maze, template, SEED=N
         os.system("clear")
     print("Thanks, see you soon 🤗")
     sys.exit()
+    return (maze)
 
 
-#main(9,9,(0,0),(8,8),None,None,None,"kru")
 # main(config["HEIGHT"], config["WIDTH"], config["ENTRY"], config["EXIT"],
-#      config["OUTPUT_FILE"], config["PERFECT"], config.get('seed', None), config.get("algorithm", "kruskal"))
+#      config["OUTPUT_FILE"], config["PERFECT"], config.get('seed', None),
+#      config.get("algorithm", "kruskal"))

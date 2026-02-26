@@ -1,12 +1,12 @@
 from parsing import parsing
-from mazegen_package.mazegen import MazeGenerator
+from mazegen_package import MazeGenerator
 from mlx import Mlx
 from draw_maze import MazeDrawer, fill_cell
 from menu import menu_ptr
 import sound
 from output_gen import output_maze
 import signal
-import ascii_print.ascii
+from ascii_print.ascii import main
 from typing import cast, Any
 
 config = parsing()
@@ -25,9 +25,9 @@ maze_gen = MazeGenerator(WIDTH, HEIGHT, PERFECT, SEED)
 maze = maze_gen.maze
 if display_mode == "ascii":
     template = MazeGenerator(WIDTH, HEIGHT, PERFECT, SEED)
-    ascii_print.ascii.main(HEIGHT, WIDTH, ENTRY, EXIT,
-                           OUTPUT_FILE, PERFECT, maze_gen,
-                           template, SEED, ALGORITHM)
+    main(HEIGHT, WIDTH, ENTRY, EXIT,
+         OUTPUT_FILE, PERFECT, maze_gen,
+         template, SEED, ALGORITHM)
 if __name__ == "__main__":
     # init mlx
     signal.signal(signal.SIGINT, signal.SIG_IGN)

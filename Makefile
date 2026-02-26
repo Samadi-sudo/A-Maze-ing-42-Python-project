@@ -1,6 +1,6 @@
 PYTHON = python3
 PIP    = pip3
-MAIN   = a_maze_in.py
+MAIN   = a_maze_ing.py
 CONFIG = config.txt
 MLX_WHEEL_URL = https://cdn.intra.42.fr/document/document/43689/mlx-2.2-py3-ubuntu-any.whl
 MLX_WHEEL = mlx-2.2-py3-none-any.whl
@@ -29,11 +29,6 @@ lint:
 		--ignore-missing-imports \
 		--disallow-untyped-defs \
 		--check-untyped-defs \
-		--namespace-packages \
-		--explicit-package-bases
 
-lint-strict:
-	flake8 .
-	mypy . --strict
 
-.PHONY: install run debug clean lint lint-strict
+.PHONY: install run debug clean lint

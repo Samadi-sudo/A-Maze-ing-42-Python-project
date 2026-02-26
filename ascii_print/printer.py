@@ -7,9 +7,12 @@ class Color:
     block = 0
 
 
-def print_maze(maze, path=None, entry=(), exit=(), message=None, color_wa=None,
-               color_42=None, animation=True):
-    N , E, S , W = 1, 2, 4, 8
+def print_maze(maze: list, path: list | None = None,
+               entry: tuple[int, int] = (0, 0), exit: tuple[int, int] = (1, 1),
+               message: str | None = None, color_wa: int | None = None,
+               color_42: int | None = None,
+               animation: bool | None = None) -> str:
+    N, E, S, W = 1, 2, 4, 8
     if platform.system() == 'Windows':
         os.system('cls')
     else:
@@ -34,7 +37,8 @@ def print_maze(maze, path=None, entry=(), exit=(), message=None, color_wa=None,
     if path is None:
         path = []
     draw = ""
-    def is_in_path(x, y):
+
+    def is_in_path(x: int,  y: int) -> bool:
         if x >= width or y >= height:
             return False
         return (x, y) in path
@@ -112,3 +116,4 @@ def print_maze(maze, path=None, entry=(), exit=(), message=None, color_wa=None,
     print('| 8. Moving the dog                      |')
     print('| 9. Quit                                |')
     print('══════════════════════════════════════════')
+    return (draw)

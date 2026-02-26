@@ -304,7 +304,7 @@ class MazeGenerator:
         self.solution = []
         return history
 
-    def make_imperfect(self, rng: Any=random) -> None:
+    def make_imperfect(self, rng: Any = random) -> None:
         for y in range(self.height):
             for x in range(self.width):
                 if self.maze.grid[y][x].walls == N | E | S | W:
