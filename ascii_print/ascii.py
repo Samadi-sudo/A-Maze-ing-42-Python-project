@@ -8,7 +8,7 @@ from ascii_print import printer
 import sound
 
 
-def animation(hestory: list, height: int, width: int, entry: tuple,
+def animation(hestory: list, entry: tuple,
               exit: tuple, anim: bool, maze: list, mesage: str,
               template: Any) -> bool:
     """ Displays the process of creating the maze step
@@ -92,13 +92,15 @@ def main(HEIGHT: int, WIDTH: int, ENTRY: tuple, EXIT: tuple,
                     for y in range(HEIGHT):
                         if maze.maze.grid[y][x].walls != 15:
                             maze.maze.grid[y][x].visited = False
+                        template.maze.grid[y][x].walls = 15
+                        template.maze.grid[y][x].visited = False
                 if solve_algo == 2:
                     maze.bfs_solution(ENTRY, EXIT)
                 elif solve_algo == 3:
                     maze.dfs_solution(ENTRY, EXIT)
                 else:
                     maze.a_star_solution(ENTRY, EXIT)
-                animation(hestory, HEIGHT, WIDTH, ENTRY, EXIT, anim,
+                animation(hestory, ENTRY, EXIT, anim,
                           grid, mesage, template)
                 output_maze(maze, OUTPUT_FILE, ENTRY, EXIT)
                 choice = int(input('Choice ?(1-9): '))
