@@ -274,15 +274,18 @@ class MazeGenerator:
             xa, ya = pos
             xb, yb = sorti
             return (abs(xb - xa) + abs(yb - ya))
-
+        
+        # [(f, g, poinet, [path])]
         open_list = [(0, 0, entry, [entry])]
         directions = ['N', 'E', 'S', 'W']
         history: list = []
         while open_list:
+            # get the point that has the smallest f
             best_index = 0
             for i in range(1, len(open_list)):
                 if open_list[i][0] < open_list[best_index][0]:
                     best_index = i
+            # remove the point on open_list
             f, g, current, path = open_list.pop(best_index)
             x, y = current
             if current == sorti:
@@ -291,6 +294,7 @@ class MazeGenerator:
             if self.maze.grid[y][x].visited:
                 continue
             self.maze.grid[y][x].visited = True
+            # Add neighbors to open_list
             for direction in directions:
                 nx, ny = self.maze.moved(x, y, direction)
                 if (nx, ny) == (x, y):
@@ -322,3 +326,4 @@ class MazeGenerator:
                 self.maze.grid[y][x].visited = True
                 if (nx, ny) != (x, y):
                     self.maze.grid[ny][nx].visited = True
+
