@@ -47,7 +47,7 @@ def print_maze(maze: list, path: list | None = None,
     def is_in_path(x: int,  y: int) -> bool:
         """Checks whether the given cell is part of
         the current solution path."""
-        if x >= width or y >= height:
+        if 0 > x or x >= width or 0 > y or y >= height:
             return False
         return (x, y) in path
     if message:
