@@ -274,7 +274,6 @@ class MazeGenerator:
             xa, ya = pos
             xb, yb = sorti
             return (abs(xb - xa) + abs(yb - ya))
-        
         # [(f, g, poinet, [path])]
         open_list = [(0, 0, entry, [entry])]
         directions = ['N', 'E', 'S', 'W']
@@ -326,4 +325,3 @@ class MazeGenerator:
                 self.maze.grid[y][x].visited = True
                 if (nx, ny) != (x, y):
                     self.maze.grid[ny][nx].visited = True
-
