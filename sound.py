@@ -4,6 +4,7 @@ _running_sounds: dict[str, subprocess.Popen] = {}
 
 
 def play_song(sound_path: str) -> None:
+    """Play an audio file using VLC (cvlc)"""
     process = _running_sounds.get(sound_path)
 
     if process:
@@ -22,6 +23,7 @@ def play_song(sound_path: str) -> None:
 
 
 def stop_song(sound_path: str) -> None:
+    """ Stop playing an audio file if it is currently playing"""
     process = _running_sounds.get(sound_path)
     if process and process.poll() is None:
         process.terminate()

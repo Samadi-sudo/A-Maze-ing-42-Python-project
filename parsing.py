@@ -3,18 +3,24 @@ import sys
 
 
 class ParsingError(Exception):
+    """ A general error occurs while reading or
+    analyzing the configuration file (config)"""
     pass
 
 
 class SurfaceError(ParsingError):
+    """Error related to the dimensions of the maze (width or length)"""
     pass
 
 
 class CordonateEroor(ParsingError):
+    """Error related to ENTRY or EXIT coordinates"""
     pass
 
 
 def forbiden_cells(width: int, height: int) -> list:
+    """Return prohibited cells (used to draw the 42 logo)
+       that cannot be selected as an entry or exit point"""
     x = width // 2
     y = height // 2
     lst_4 = [
@@ -39,6 +45,7 @@ def forbiden_cells(width: int, height: int) -> list:
 
 
 def check_parsing(config: Dict[str, object]) -> Dict[str, object]:
+    """Verify the settings data after reading it"""
     try:
         config['WIDTH'], config['HEIGHT'], config['ENTRY']
         config['EXIT'], config['OUTPUT_FILE'], config['PERFECT']
@@ -85,6 +92,7 @@ def check_parsing(config: Dict[str, object]) -> Dict[str, object]:
 
 
 def parsing() -> Dict[str, object]:
+    """  Reading and analyzing the settings file from the command line"""
     if len(sys.argv) != 2:
         print("ERROR you should do: python3 a_maze_in.py <config_file>")
         sys.exit(1)
