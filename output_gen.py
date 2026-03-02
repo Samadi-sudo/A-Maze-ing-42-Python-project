@@ -1,5 +1,5 @@
 from mazegen_package.mazegen import MazeGenerator, DIRS
-
+import os
 
 def path(maze_gen: MazeGenerator) -> list:
     """take the solution and turn it into
@@ -24,6 +24,7 @@ def output_maze(maze_gen: MazeGenerator,
     sx, sy = ENTRY
     ex, ey = EXIT
     try:
+        os.system('mkdir output')
         with open(f"./output/{file}", 'w') as f:
             for y in range(rows):
                 for x in range(cols):
