@@ -2,6 +2,8 @@ from mazegen_package.mazegen import MazeGenerator, DIRS
 
 
 def path(maze_gen: MazeGenerator) -> list:
+    """take the solution and turn it into
+    directions so that it can be easily interpreted"""
     dic = DIRS
     coordinates = maze_gen.solution
     directions = []
@@ -16,6 +18,7 @@ def path(maze_gen: MazeGenerator) -> list:
 
 def output_maze(maze_gen: MazeGenerator,
                 file: str, ENTRY: tuple, EXIT: tuple) -> None:
+    """output the maze, the entry , the exit, and the directions"""
     rows = len(maze_gen.maze.grid)
     cols = len(maze_gen.maze.grid[0])
     sx, sy = ENTRY
