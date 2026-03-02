@@ -7,7 +7,7 @@ MLX_WHEEL = mlx-2.2-py3-none-any.whl
 
 install:
 	@wget -O $(MLX_WHEEL) $(MLX_WHEEL_URL) || true
-	@$(PIP) install --user $(MLX_WHEEL) flake8 mypy
+	@$(PIP) install $(MLX_WHEEL) flake8 mypy
 
 run:
 	$(PYTHON) $(MAIN) $(CONFIG)
@@ -32,3 +32,4 @@ lint:
 
 
 .PHONY: install run debug clean lint
+
