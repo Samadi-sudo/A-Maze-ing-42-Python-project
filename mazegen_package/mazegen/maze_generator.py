@@ -12,6 +12,8 @@ DIRS = {
 
 
 class Cell:
+    """define what's a cell
+    (the walls and the knowledge of it being visited)"""
     def __init__(self) -> None:
         self.walls = N | E | S | W
         self.visited = False
@@ -21,6 +23,8 @@ class Cell:
 
 
 class Maze:
+    """a helper class that make it easier
+    to carve and move inside the grid or the maze"""
     def __init__(self, w: int, h: int) -> None:
         self.w, self.h = w, h
         self.grid = [[Cell() for _ in range(w)] for _ in range(h)]
@@ -53,6 +57,7 @@ class Maze:
 
 
 class MazeGenerator:
+    """a class that generate the maze and give you the solution if asked to"""
     def __init__(self, width: int, height: int,
                  perfect: bool = True, seed: Optional[int] = None) -> None:
         if width < 2 or height < 2:
@@ -83,7 +88,9 @@ class MazeGenerator:
                 self.maze.grid[new_y][new_x].visited = True
 
     def dfs_backtracking_recursive(self, x: int, y: int) -> bool:
-        """Generate maze using Depth-First Search with backtracking."""
+        """Generate maze using Depth-First Search with backtracking.
+        (recursive version)
+        don't use it it's for learning puposes only"""
         if self.maze.grid[y][x].visited:
             return False
 
@@ -104,6 +111,8 @@ class MazeGenerator:
         return True
 
     def dfs_backtracking_iterative(self, x: int, y: int) -> None:
+        """Generate maze using Depth-First Search with backtracking.
+        (iterative version)"""
         stack = [(x, y)]
         while stack:
             x, y = stack[-1]
@@ -172,6 +181,7 @@ class MazeGenerator:
         return True
 
     def kruskal_algorithm(self) -> None:
+        """Generate maze using kruskal algorithm."""
         parent = dict()
         cell_to_root = {}
         for y in range(self.height):
@@ -225,6 +235,7 @@ class MazeGenerator:
             self.make_imperfect(rng)
 
     def dfs_solution(self, entry: tuple, sorti: tuple) -> list:
+        """using dfs to find your way into the maze"""
         stack = []
         stack.append(entry)
         history = []
@@ -250,6 +261,7 @@ class MazeGenerator:
         return history
 
     def bfs_solution(self, entry: tuple, sorti: tuple) -> list:
+        """find the shortest path using bfs"""
         queue: list = [[entry, [entry]]]
         direction = ['N', 'E', 'S', 'W']
         history: list = []
@@ -270,6 +282,8 @@ class MazeGenerator:
         return []
 
     def a_star_solution(self, entry: tuple, sorti: tuple) -> list:
+        """find the shortest path using a_star with the feature
+        of visiting less visited cells than bfs """
         def ft_manhaten(pos: tuple, sorti: tuple) -> Any:
             xa, ya = pos
             xb, yb = sorti

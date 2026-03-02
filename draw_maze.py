@@ -77,7 +77,8 @@ def draw_42(mlx: Any, mlx_ptr: Any, img_ptr: Any, color: Any,
 
 
 def resize_image_to_fit(input_path: str, size: int) -> str:
-    """used only to resize the image to fit the cell return the path of the new image"""
+    """used only to resize the image to fit
+    the cell return the path of the new image"""
     root = tk.Tk()
     root.withdraw()  # close the window
 
@@ -120,7 +121,8 @@ class MazeDrawer:
                     (WIDTH // 2, HEIGHT // 2), maze, self.CELL)
 
     def draw_cell(self, maze: Any, x: int, y: int, color: Any) -> None:
-        """draw a cell over again by turning the borders to black and redrawing it"""
+        """draw a cell over again by turning
+        the borders to black and redrawing it"""
         tmp = maze.grid[y][x].walls
         maze.grid[y][x].walls = 15
         draw_cell(self.m, self.mlx_ptr, self.win_ptr,

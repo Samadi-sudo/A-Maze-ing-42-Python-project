@@ -38,7 +38,8 @@ def fill_rectangle(x: int, y: int, w: int, h: int,
 
 
 def draw_menu(mlx: Any, mlx_ptr: Any, menu_ptr: Any) -> list:
-    """draw everything i need into the menu the rectangle and the string that go with it"""
+    """draw everything i need into the menu the rectangle
+    and the string that go with it"""
     mlx.mlx_string_put(mlx_ptr, menu_ptr, 190, 10,
                        0xFF00F0F0, "Welcome to my:")
     mlx.mlx_string_put(mlx_ptr, menu_ptr, 180, 30,
