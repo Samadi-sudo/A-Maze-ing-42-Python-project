@@ -1,6 +1,7 @@
 from mazegen_package.mazegen import MazeGenerator, DIRS
 import os
 
+
 def path(maze_gen: MazeGenerator) -> list:
     """take the solution and turn it into
     directions so that it can be easily interpreted"""
