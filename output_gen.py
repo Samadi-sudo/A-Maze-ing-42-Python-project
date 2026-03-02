@@ -23,12 +23,16 @@ def output_maze(maze_gen: MazeGenerator,
     cols = len(maze_gen.maze.grid[0])
     sx, sy = ENTRY
     ex, ey = EXIT
-    with open(file, 'w') as f:
-        for y in range(rows):
-            for x in range(cols):
-                f.write(hex(maze_gen.maze.grid[y][x].walls)[2:])
-            f.write('\n')
-        f.write(f"\n{sx},{sy}\n")
-        f.write(f"{ex},{ey}\n")
-        for i in path(maze_gen):
-            f.write(i)
+    try:
+        with open(f"./output/{file}", 'w') as f:
+            for y in range(rows):
+                for x in range(cols):
+                    f.write(hex(maze_gen.maze.grid[y][x].walls)[2:])
+                f.write('\n')
+            f.write(f"\n{sx},{sy}\n")
+            f.write(f"{ex},{ey}\n")
+            for i in path(maze_gen):
+                f.write(i)
+    except Exception:
+        print("either the folder output isn't their or there"
+              "is something wrong with the output file name")

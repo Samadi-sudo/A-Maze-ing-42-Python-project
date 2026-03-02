@@ -17,6 +17,7 @@ debug:
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
+	rm -rf ./output/*
 	rm -rf .mypy_cache
 	rm -rf images/*/*_resized.png
 	rm $(MLX_WHEEL)
