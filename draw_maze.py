@@ -6,18 +6,21 @@ import os
 
 def hline(mlx: Any, mlx_ptr: Any, img_ptr: Any, x1: int,
           x2: int, y: int, color: Any) -> None:
+    """draw a horizontal line"""
     for x in range(x1, x2):
         mlx.mlx_pixel_put(mlx_ptr, img_ptr, x, y, color)
 
 
 def vline(mlx: Any, mlx_ptr: Any, img_ptr: Any,
           x: int, y1: int, y2: int, color: Any) -> None:
+    """draw a vertical line"""
     for y in range(y1, y2):
         mlx.mlx_pixel_put(mlx_ptr, img_ptr, x, y, color)
 
 
 def draw_cell(mlx: Any, mlx_ptr: Any, img_ptr: Any, cell: Any,
               x: int, y: int, WALL_COLOR: Any, CELL: int) -> None:
+    """draw one cell"""
     px = x * CELL
     py = y * CELL
 
@@ -36,6 +39,7 @@ def draw_cell(mlx: Any, mlx_ptr: Any, img_ptr: Any, cell: Any,
 
 def fill_cell(mlx: Any, mlx_ptr: Any, img_ptr: Any,
               x: int, y: int, color: Any, CELL: int) -> None:
+    """color a Cell"""
     px = x * CELL
     py = y * CELL
     for i in range(px+2, px + CELL-1):
@@ -45,6 +49,7 @@ def fill_cell(mlx: Any, mlx_ptr: Any, img_ptr: Any,
 
 def draw_42(mlx: Any, mlx_ptr: Any, img_ptr: Any, color: Any,
             centre: tuple, maze: Any, CELL: int) -> Any:
+    """draw the logo and set each of it cells to true"""
     x, y = centre
     lst_4 = [
         (x-3, y-2),
@@ -72,6 +77,7 @@ def draw_42(mlx: Any, mlx_ptr: Any, img_ptr: Any, color: Any,
 
 
 def resize_image_to_fit(input_path: str, size: int) -> str:
+    """used only to resize the image to fit the cell return the path of the new image"""
     root = tk.Tk()
     root.withdraw()  # close the window
 
@@ -94,6 +100,7 @@ def resize_image_to_fit(input_path: str, size: int) -> str:
 
 
 class MazeDrawer:
+    """class that make it easier to draw the maze"""
     def __init__(self, m: Any, mlx_ptr: Any, win_ptr: Any, CELL: int) -> None:
         self.m = m
         self.mlx_ptr = mlx_ptr
@@ -102,6 +109,7 @@ class MazeDrawer:
 
     def draw_maze(self, WIDTH: int, HEIGHT: int,
                   maze: Any, color: Any) -> None:
+        """draw the entire maze (logo included)"""
         for y in range(maze.h):
             for x in range(maze.w):
                 draw_cell(self.m, self.mlx_ptr, self.win_ptr,
@@ -112,6 +120,7 @@ class MazeDrawer:
                     (WIDTH // 2, HEIGHT // 2), maze, self.CELL)
 
     def draw_cell(self, maze: Any, x: int, y: int, color: Any) -> None:
+        """draw a cell over again by turning the borders to black and redrawing it"""
         tmp = maze.grid[y][x].walls
         maze.grid[y][x].walls = 15
         draw_cell(self.m, self.mlx_ptr, self.win_ptr,
@@ -121,6 +130,7 @@ class MazeDrawer:
                   maze.grid[y][x], x, y, color ^ 0x00FF0F0F, self.CELL)
 
     def draw_image(self, x: int, y: int, player: str) -> Any:
+        """literaly draw any image in a ny chosen cell"""
         resized_path = resize_image_to_fit(player, self.CELL)
 
         resized, w, h = self.m.mlx_png_file_to_image(
