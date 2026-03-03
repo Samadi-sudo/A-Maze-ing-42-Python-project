@@ -76,7 +76,7 @@ def main(HEIGHT: int, WIDTH: int, ENTRY: tuple, EXIT: tuple,
         try:
             if choice == 1:
                 maze.__init__(WIDTH, HEIGHT, PERFECT, SEED)
-                if WIDTH < 6 or WIDTH < 8:
+                if WIDTH <= 6 or HEIGHT <= 8:
                     mesage = "Cannot place '42' pattern without collision"
                 else:
                     maze.p42()
